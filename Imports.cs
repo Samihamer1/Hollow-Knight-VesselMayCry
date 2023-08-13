@@ -1,0 +1,16 @@
+﻿global using HutongGames.PlayMaker;
+global using HutongGames.PlayMaker.Actions;
+global using Modding;
+global using System;
+global using System.Collections;
+global using System.Collections.Generic;
+global using System.Text.RegularExpressions;
+global using System.IO;
+global using UnityEngine;
+global using UnityEngine.EventSystems;
+global using Vasi;
+global using UObject = UnityEngine.Object;
+global using UnityEngine.UI;
+global using GlobalEnums;
+global using System.Reflection;
+global using FrogCore;
