@@ -86,6 +86,15 @@
                     hitInstance.Multiplier *= 1.3f;
                 }               
             }
+
+            Modding.Logger.Log(hitInstance.AttackType);
+            Modding.Logger.Log(hitInstance.CircleDirection);
+            Modding.Logger.Log(hitInstance.SpecialType);
+            Modding.Logger.Log(hitInstance.Source);
+            Modding.Logger.Log(hitInstance.MoveAngle);
+            Modding.Logger.Log(hitInstance.MoveDirection);
+            Modding.Logger.Log(hitInstance.MagnitudeMultiplier);
+
             orig(self, hitInstance);
         }
 

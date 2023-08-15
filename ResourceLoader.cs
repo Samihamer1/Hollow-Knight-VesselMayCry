@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using System.Net;
 
 namespace VesselMayCry
 {
@@ -24,6 +25,19 @@ namespace VesselMayCry
         {
             Texture2D texture = LoadTexture2D(path);
             return Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), Vector2.one / 2, 100.0f);
+        }
+
+        public static AudioClip LoadAudioClip(string path)
+        {
+            Stream audioStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(path);
+            if (audioStream != null)
+            {
+                byte[] buffer = new byte[audioStream.Length];
+                audioStream.Read(buffer, 0, buffer.Length);
+                audioStream.Dispose();
+                return WavUtil.ToAudioClip(buffer);
+            }
+            return null;
         }
     }
 }

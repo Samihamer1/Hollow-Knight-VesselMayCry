@@ -100,6 +100,7 @@
             LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCut", "JudgementCut", 12);
             LoadAnimation("VesselMayCry.Resources.YamatoAnims.ComboC", "ComboC", 25);
             LoadAnimation("VesselMayCry.Resources.YamatoAnims.UpperSlash", "UpperSlash", 3);
+            LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCutEnd", "JudgementCutEnd", 36);
 
             //knight anims
             LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.JudgementCut.set.png", "JC", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 3, 109, 128, false, 0);

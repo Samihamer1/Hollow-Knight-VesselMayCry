@@ -1,5 +1,6 @@
 ﻿using FrogCore;
 using FrogCore.Ext;
+using UnityEngine;
 
 namespace VesselMayCry.Yamato
 {
@@ -20,11 +21,20 @@ namespace VesselMayCry.Yamato
         private tk2dSprite upslash;
         private tk2dSprite downslash;
 
+        private GameObject whiteburst;
+        private GameObject soundobject;
+        private AudioSource knightaudio;
+
+        private AudioClip jcestart;
+        private AudioClip jceend;
+        private AudioClip jcaudio;
+
         public void Awake()
         {
             CreateJCut();
             CreateComboC();
             CreateUpperSlash();
+            CreateJudgementCutEnd();
             init = true;
 
             slash = HeroController.instance.gameObject.Child("Attacks").Child("Slash").GetComponent<tk2dSprite>();
@@ -32,6 +42,20 @@ namespace VesselMayCry.Yamato
             wallslash = HeroController.instance.gameObject.Child("Attacks").Child("WallSlash").GetComponent<tk2dSprite>();
             upslash = HeroController.instance.gameObject.Child("Attacks").Child("UpSlash").GetComponent<tk2dSprite>();
             downslash = HeroController.instance.gameObject.Child("Attacks").Child("DownSlash").GetComponent<tk2dSprite>();
+
+            GameObject bursteffect = HeroController.instance.gameObject.Child("Effects").Child("SD Burst Glow");
+            whiteburst = Instantiate(bursteffect, HeroController.instance.transform);
+            whiteburst.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+
+            soundobject = new GameObject("SoundObject");
+            soundobject.transform.parent = HeroController.instance.gameObject.Child("Sounds").transform;
+
+            jcestart = ResourceLoader.LoadAudioClip("VesselMayCry.Resources.Sounds.JCEStart.wav");
+            jceend = ResourceLoader.LoadAudioClip("VesselMayCry.Resources.Sounds.JCEEnd.wav");
+            jcaudio = ResourceLoader.LoadAudioClip("VesselMayCry.Resources.Sounds.JC.wav");
+
+            knightaudio = soundobject.AddComponent<AudioSource>();
+            knightaudio.clip = jcestart;
         }
         public void OnEnable()
         {
@@ -40,7 +64,8 @@ namespace VesselMayCry.Yamato
             CreateJCut();
             CreateComboC();
             CreateUpperSlash();
-            
+            CreateJudgementCutEnd();
+
         }
 
         public void OnDisable()
@@ -158,6 +183,9 @@ namespace VesselMayCry.Yamato
                     StartCoroutine(DestroyAfter(cut,0.4f));
                     StartCoroutine(timedattacktoggle(0.4f));
 
+                    //audio
+                    knightaudio.PlayOneShot(jcaudio, GameManager.instance.GetImplicitCinematicVolume() * 0.65f);
+
                     //anim test
                     tk2dSpriteAnimator animator = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
                     animator.Stop();
@@ -179,10 +207,11 @@ namespace VesselMayCry.Yamato
                 newstate.RemoveTransition("FINISHED");
                 newstate.AddMethod(() =>
                 {
-                    GameObject cut = CreateAttackTemplate("Upper Slash", 2.5f, 2.5f, HeroController.instance.transform.position, true);
+                    GameObject cut = CreateAttackTemplate("Upper Slash", 3f, 3f, HeroController.instance.transform.position, true);
                     SpriteRenderer render = cut.GetComponent<SpriteRenderer>();
                     //tempdamage
                     ContactDamage damage = cut.AddComponent<ContactDamage>();
+                    damage.SetLauncher(true);
                     cut.SetActive(true);
 
                     StartCoroutine(Anims.PlayAnimation("UpperSlash", render, 0.15f));
@@ -200,6 +229,105 @@ namespace VesselMayCry.Yamato
             nailartfsm.ChangeTransition("Has Cyclone?", "FINISHED", "Upper Slash");
         }
 
+        private void CreateJudgementCutEnd()
+        {
+            PlayMakerFSM spellcontrol = HeroController.instance.spellControl;
+            if (!init)
+            {
+                FsmState combostate = spellcontrol.CreateState("Judgement Cut End");
+                combostate.RemoveTransition("FINISHED");
+                combostate.AddMethod(() =>
+                {
+                    float timescale = 0.001f;
+
+                    //canvas
+                    GameObject jcecanvas = CanvasUtil.CreateCanvas(RenderMode.ScreenSpaceOverlay, new Vector2(1280f, 720f));
+                    jcecanvas.GetComponent<Canvas>().sortingOrder = 0;
+
+                    //bg
+                    StartCoroutine(JCEAnimate(jcecanvas, 4 * timescale));
+
+                    //immunity
+                    HeroController.instance.cState.invulnerable = true;
+
+                    //t t t t tiiiime scale (i cant make it 0, so im doing this instead. will it cause problems? dunno.)
+                    Time.timeScale = timescale;
+
+                    //thats a lotta coroutines
+                    // StartCoroutine(Anims.PlayAnimation("JudgementCutEnd", render, 5f));
+                    StartCoroutine(DestroyAfter(jcecanvas, 4 * timescale));
+                    StartCoroutine(timedattacktoggle(4 * timescale));
+
+                    //anim
+                    tk2dSpriteAnimator animator = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
+                    HeroController.instance.StopAnimationControl();
+                    //animator.Play("ComboC");
+
+                });
+                combostate.AddTransition("NEXT", "Spell End");
+            }
+            spellcontrol.ChangeTransition("Has Scream?", "CAST", "Judgement Cut End");
+
+        }
+
+        private IEnumerator JCEAnimate(GameObject canvas, float time)
+        {
+            Texture2D bgtexture = ResourceLoader.LoadTexture2D("VesselMayCry.Resources.YamatoAnims.JudgementCutEnd.1.png");
+            Sprite bgsprite = Sprite.Create(bgtexture, new Rect(0, 0, bgtexture.width, bgtexture.height), new Vector2(0f, 0f));
+            GameObject jceimage = CanvasUtil.CreateImagePanel(canvas, bgsprite, new CanvasUtil.RectData(bgsprite.rect.size * 2, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)));
+            int count = 45;
+            //also audio
+            knightaudio.clip = jcestart;
+            knightaudio.PlayOneShot(knightaudio.clip, GameManager.instance.GetImplicitCinematicVolume());
+
+            for (int i  = 1; i < count; i++)
+            {
+                if (canvas != null) { 
+                    bgtexture = ResourceLoader.LoadTexture2D("VesselMayCry.Resources.YamatoAnims.JudgementCutEnd."+i+".png");
+                    bgsprite = Sprite.Create(bgtexture, new Rect(0, 0, bgtexture.width, bgtexture.height), new Vector2(0f, 0f));
+                    Destroy(jceimage);
+                    jceimage = CanvasUtil.CreateImagePanel(canvas, bgsprite, new CanvasUtil.RectData(bgsprite.rect.size * 2, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)));
+                    yield return new WaitForSeconds(time / count);
+                }
+            }
+
+            Time.timeScale = 1f;
+
+            knightaudio.clip = jceend;
+            knightaudio.PlayOneShot(knightaudio.clip, GameManager.instance.GetImplicitCinematicVolume());
+            whiteburst.SetActive(true);            
+            HeroController.instance.gameObject.Child("Effects").Child("SD Sharp Flash").SetActive(true);
+
+            //shake
+            GameCameras.instance.gameObject.Child("CameraParent").GetComponent<PlayMakerFSM>().SendEvent("BigShake");
+
+            //also damage even if under animate name heehee
+
+            HealthManager[] obj = FindObjectsOfType<HealthManager>();
+            float distance = 45f;
+            for (int j = 0; j < obj.Length; j++)
+            {
+
+                float mag = (obj[j].gameObject.transform.position - HeroController.instance.transform.position).magnitude;
+                if (mag < distance)
+                {
+                    HitInstance hitInstance = new HitInstance();
+                    hitInstance.AttackType = AttackTypes.Nail;
+                    hitInstance.IgnoreInvulnerable = true;
+                    hitInstance.Multiplier = 1;
+                    hitInstance.MagnitudeMultiplier = 0;
+                    hitInstance.MoveDirection = true;
+                    hitInstance.CircleDirection = false;
+                    hitInstance.Source = this.gameObject;
+
+                    hitInstance.DamageDealt = 200;
+                    HitTaker.Hit(obj[j].gameObject, hitInstance);
+                }
+            }
+
+            yield return new WaitForSeconds(0.3f);
+            HeroController.instance.cState.invulnerable = false;
+        }
 
         private void CreateComboC()
         {

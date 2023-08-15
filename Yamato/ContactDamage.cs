@@ -10,6 +10,10 @@ namespace VesselMayCry.Yamato
     internal class ContactDamage : MonoBehaviour
     {
         private int damagenumber = 40;
+        private float magnitude = 0f;
+        private int direction = (int)AttackDirection.normal;
+
+
         public void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider.gameObject.GetComponent<HealthManager>() != null || collider.gameObject.GetComponentInChildren<HealthManager>() != null || collider.GetComponentInParent<HealthManager>() != null)
@@ -27,10 +31,15 @@ namespace VesselMayCry.Yamato
             hitInstance.AttackType = AttackTypes.Nail;
             hitInstance.IgnoreInvulnerable = true;
             hitInstance.Multiplier = 1;
-            hitInstance.MagnitudeMultiplier = 0;
+            hitInstance.MagnitudeMultiplier = magnitude;
             hitInstance.MoveDirection = true;
             hitInstance.CircleDirection = false;
+            hitInstance.Direction = direction;
             hitInstance.Source = this.gameObject;
+            if (magnitude == 2f)
+            {
+                hitInstance.MoveAngle = 0;
+            }
 
             hitInstance.DamageDealt = damagenumber;
             HitTaker.Hit(obj, hitInstance);
@@ -56,6 +65,16 @@ namespace VesselMayCry.Yamato
                         }
                     }
                 }
+            }
+        }
+
+        public void SetLauncher(bool val)
+        {
+            if (val)
+            {
+                direction = (int)AttackDirection.upward;
+                magnitude = 2f;
+ 
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Modding.Menu;
+using UnityEngine;
 
 namespace VesselMayCry
 {
@@ -11,6 +12,7 @@ namespace VesselMayCry
         float meterloss = 7.5f;
         float[] meterlevels = { 20, 25, 35, 40, 50, 60, 70 };
         string[] ranks = {"D","C","B","A","S","SS","SSS"};
+        string[] quickerstales = {"ComboC"};
         private GameObject stylecanvas;
         private GameObject stylemeterfg;
         private GameObject ranktext;
@@ -30,6 +32,7 @@ namespace VesselMayCry
         private int LargeLoss(int damage)
         {
             float loss = 50;
+            attacklist.Clear();
             while (meter - loss <= 0)
             {
                 float totalmeter = 0;
@@ -62,7 +65,6 @@ namespace VesselMayCry
                 meter = newtotalmeter;
                 rank = newrank;
             }
-            attacklist = new Dictionary<string, int>();
             return damage;
         }
 
@@ -123,13 +125,19 @@ namespace VesselMayCry
             }
 
             //add to meter.
-            if (attacklist[fullname] < 5) {
+            int maxuses = 5;
+            string nonumber = attackname.Remove(attackname.Length - 1);
+            if (quickerstales.Contains<string>(nonumber))
+            {
+                maxuses = 2;
+            }
+            if (attacklist[fullname] < maxuses) {
                 meter += 15;
-                if (meter > metermax && rank < 7)
+                if (meter > metermax && rank < 6)
                 {
                     meter = meter - metermax;
                     rank += 1;
-                } else if (meter > metermax && rank == 7)
+                } else if (meter > metermax && rank == 6)
                 {
                     meter = metermax;
                 }
