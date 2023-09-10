@@ -1,31 +1,50 @@
-﻿using Modding.Menu;
-using UnityEngine;
-
-namespace VesselMayCry
+﻿namespace VesselMayCry
 {
     internal class Style: MonoBehaviour
     {
         Dictionary<string, int> attacklist = new Dictionary<string, int>();
         public static int rank = 0;
-        float meter = 0;
-        float metermax = 60;
+        public static float meter = 0;
+        public static float metermax = 60;
         float meterloss = 7.5f;
         float[] meterlevels = { 20, 25, 35, 40, 50, 60, 70 };
-        string[] ranks = {"D","C","B","A","S","SS","SSS"};
-        string[] quickerstales = {"ComboC"};
-        private GameObject stylecanvas;
-        private GameObject stylemeterfg;
-        private GameObject ranktext;
-        //private GameObject stylemeterbg;
-        public static Image stylemeterbar;
+        public static string[] ranks = {"D","C","B","A","S","SS","SSS"};
+
+        private Dictionary<string, float> MeterGain = new Dictionary<string, float>()
+        {
+            {"Judgement Cut", 15},
+            {"Upper Slash", 10 },
+            {"Judgement Cut End", 30 },
+            {"Aerial Cleave", 15 },
+            {"Combo C", 8},
+            {"Hell On Earth", 30 },
+            {"Strong Punch", 10 },
+            {"Strong PunchC", 25 },
+            {"Dash Punch", 10 },
+            {"Dash PunchC", 20 },
+            {"Starfall", 15 },
+            {"Uppercut", 20 },
+            {"UppercutC", 25 },
+            {"Lunar Phase", 15 },
+            {"Deep Stinger", 15 },
+            {"Stinger Strike", 30 },
+            {"Overdrive", 15 },
+            {"Drive", 10 },
+            {"Round Trip", 15 },
+            {"Blistering Swords", 10 },
+            {"Spiral Swords", 10 },
+            {"Slash", 8 },
+            {"AltSlash", 8 },
+            {"UpSlash", 8 },
+            {"DownSlash", 8 }
+        };
+
 
         private void Start()
         {
             On.HealthManager.TakeDamage += AddToList;
             ModHooks.TakeHealthHook += LargeLoss;
-            //bar hooks
-            On.HeroController.FinishedEnteringScene += CreateBars;
-            On.HeroController.LeaveScene += TransparentBars;
+
             
         }
 
@@ -72,10 +91,6 @@ namespace VesselMayCry
         {
             if (!HeroController.instance.cState.isPaused)
             {
-                if (stylecanvas != null)
-                {
-                    stylecanvas.SetActive(true);
-                }
                 meter -= (meterloss * Time.deltaTime);
                 metermax = meterlevels[rank];
                 if (meter < 0)
@@ -90,14 +105,6 @@ namespace VesselMayCry
                         meter = 0;
 
                     }
-                }
-
-                UpdateBar();
-            } else
-            {
-                if (stylecanvas != null)
-                {
-                    stylecanvas.SetActive(false);
                 }
             }
         }
@@ -126,13 +133,15 @@ namespace VesselMayCry
 
             //add to meter.
             int maxuses = 5;
-            string nonumber = attackname.Remove(attackname.Length - 1);
-            if (quickerstales.Contains<string>(nonumber))
-            {
-                maxuses = 2;
-            }
             if (attacklist[fullname] < maxuses) {
-                meter += 15;
+                if (MeterGain.ContainsKey(attackname))
+                {
+                    meter += MeterGain[attackname];
+                } else
+                {
+                    meter += 15;
+                }
+                
                 if (meter > metermax && rank < 6)
                 {
                     meter = meter - metermax;
@@ -142,53 +151,6 @@ namespace VesselMayCry
                     meter = metermax;
                 }
             }
-        }
-        public void UpdateBar()
-        {
-            if (stylemeterbar != null)
-            {
-                float value = meter / metermax;
-                stylemeterbar.fillAmount = value;
-            }
-            if (ranktext != null)
-            {
-                ranktext.GetComponent<Text>().text = ranks[rank];
-                if (rank == 0 && meter == 0)
-                {
-                    ranktext.GetComponent<Text>().text = "";
-                }
-            }
-        }
-
-        private void TransparentBars(On.HeroController.orig_LeaveScene orig, HeroController self, GatePosition? gate)
-        {
-            orig.Invoke(self, gate);
-            if (stylecanvas != null) {
-                stylecanvas.SetActive(false);
-            }
-        }
-
-        private void CreateBars(On.HeroController.orig_FinishedEnteringScene orig, HeroController self, bool setHazardMarker, bool preventRunBob)
-        {
-            orig.Invoke(self, setHazardMarker, preventRunBob);
-            float scale = 0.15f;
-
-            //canvas
-            stylecanvas = CanvasUtil.CreateCanvas(RenderMode.ScreenSpaceOverlay, new Vector2(1280f, 720f));
-            stylecanvas.GetComponent<Canvas>().sortingOrder = 0;
-
-            //fg
-            Texture2D fgtexture = ResourceLoader.LoadTexture2D("VesselMayCry.Resources.stylemeter.png");
-            Sprite fgsprite = Sprite.Create(fgtexture, new Rect(0, 0, fgtexture.width, fgtexture.height), new Vector2(0.5f, 0.5f));
-            stylemeterfg = CanvasUtil.CreateImagePanel(stylecanvas, fgsprite, new CanvasUtil.RectData(fgsprite.rect.size * scale, new Vector2(550f, 330f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f)));
-            //bar settings
-            stylemeterbar = stylemeterfg.GetComponent<Image>();
-            stylemeterbar.type = Image.Type.Filled;
-            stylemeterbar.fillMethod = Image.FillMethod.Horizontal;
-            stylemeterbar.preserveAspect = false;
-
-            ranktext = CanvasUtil.CreateTextPanel(stylecanvas,"",15,TextAnchor.MiddleCenter, new CanvasUtil.RectData(new Vector2(100,100), new Vector2(550f, 280f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f)), MenuResources.TrajanBold);
-            UpdateBar();
         }
     }
 }

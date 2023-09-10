@@ -295,9 +295,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\vtfg.png" />
-    <None Remove="Yamato\Base.cs~RF19901a0.TMP" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SpritePositions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\YamatoAnims\Knight\JCEDash\" />
   </ItemGroup>
 </Project>

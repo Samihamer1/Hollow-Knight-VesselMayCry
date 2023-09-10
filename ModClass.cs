@@ -1,39 +1,53 @@
-﻿namespace VesselMayCry
+﻿using UnityEngine;
+using VesselMayCry.Weapons;
+
+namespace VesselMayCry
 {
     public class VesselMayCry : Mod
     {
+        private bool switchguibuffer = false;
 
-        //public override List<ValueTuple<string, string>> GetPreloadNames()
-        //{
-        //    return new List<ValueTuple<string, string>>
-        //    {
-        //        new ValueTuple<string, string>("White_Palace_18", "White Palace Fly")
-        //    };
-        //}
 
         new public string GetName() => "Vessel May Cry";
-        public override string GetVersion() => "v0.0.0.0";
+        public override string GetVersion() => "Beta 1";
+
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             On.HeroController.Start += BecomeTheStormThatIsApproaching;
             SpritePositions.Initialise();
+            FXHelper.Setup(preloadedObjects);
+            CanvasHandler.Initialise();
+
+            
         }
 
         public static string weapon;
         private void BecomeTheStormThatIsApproaching(On.HeroController.orig_Start orig, HeroController self)
         {
+
+            //Hey, change to local position for the guis.
             orig.Invoke(self);
+
+            FXHelper.Initialise();
 
             //anims
             Anims.AnimationInit();
 
             //weapon hooks and base value changes
             CreateSwitch();
-            HeroController.instance.gameObject.AddComponent<Yamato.Base>();
+            YamatoBase yamato = HeroController.instance.gameObject.AddComponent<YamatoBase>();
+            BeowulfBase beowulf = HeroController.instance.gameObject.AddComponent<BeowulfBase>();
+            MirageEdgeBase mirageedge = HeroController.instance.gameObject.AddComponent<MirageEdgeBase>();
+
+            yamato.enabled = false;
+            beowulf.enabled = false;
+            mirageedge.enabled = false;
             HeroController.instance.BIG_FALL_TIME = 999;
             HeroController.instance.NAIL_CHARGE_TIME_CHARM = 0.2f;
             HeroController.instance.NAIL_CHARGE_TIME_DEFAULT = 0.2f;
+            //Quake Invul is now only used for super moves. One of the main compatiblity issues? Maybe try to fix. Not urgent
+            HeroController.instance.INVUL_TIME_QUAKE = 3f;
             On.HutongGames.PlayMaker.Actions.SetFloatValue.OnEnter += FocusSpeed;
 
             //concentration
@@ -50,6 +64,9 @@
 
             //damage mods
             On.HealthManager.Hit += ModifyNailDamage;
+
+
+
         }
 
         private void FocusSpeed(On.HutongGames.PlayMaker.Actions.SetFloatValue.orig_OnEnter orig, SetFloatValue self)
@@ -87,14 +104,6 @@
                 }               
             }
 
-            Modding.Logger.Log(hitInstance.AttackType);
-            Modding.Logger.Log(hitInstance.CircleDirection);
-            Modding.Logger.Log(hitInstance.SpecialType);
-            Modding.Logger.Log(hitInstance.Source);
-            Modding.Logger.Log(hitInstance.MoveAngle);
-            Modding.Logger.Log(hitInstance.MoveDirection);
-            Modding.Logger.Log(hitInstance.MagnitudeMultiplier);
-
             orig(self, hitInstance);
         }
 
@@ -104,7 +113,7 @@
             //This triggers the weapon switch mechanic.
             FsmState neutralstate = HeroController.instance.spellControl.CreateState("Neutral Check");
 
-            neutralstate.InsertMethod(0,() =>
+            neutralstate.InsertMethod(0, () =>
             {
                 if (HeroController.instance.move_input == 0 && HeroController.instance.vertical_input == 0)
                 {
@@ -126,38 +135,56 @@
             //Transitions
             HeroController.instance.spellControl.ChangeTransition("Inactive", "QUICK CAST", "Neutral Check");
             HeroController.instance.spellControl.ChangeTransition("Button Down", "BUTTON UP", "Neutral Check");
+            HeroController.instance.spellControl.ChangeTransition("Has Fireball?", "CANCEL", "Switch State");
             neutralstate.AddTransition("SWITCH", "Switch State");
             neutralstate.AddTransition("REGULAR", "Can Cast? QC");
             switchstate.AddTransition("SWITCHED", "Inactive");
 
         }
 
+
         private void DeactivateWeapons()
         {
-            HeroController.instance.GetComponent<Yamato.Base>().enabled = false;
+            HeroController.instance.GetComponent<YamatoBase>().enabled = false;
+            HeroController.instance.GetComponent<BeowulfBase>().enabled = false;
+            HeroController.instance.GetComponent<MirageEdgeBase>().enabled = false;
         }
 
         private void ActivateYamato()
         {
-            HeroController.instance.GetComponent<Yamato.Base>().enabled = true;
+            HeroController.instance.GetComponent<YamatoBase>().enabled = true;
+        }
+
+        private void ActivateBeowulf()
+        {
+            HeroController.instance.GetComponent<BeowulfBase>().enabled = true;
+        }
+
+        private void ActivateMirageEdge()
+        {
+            HeroController.instance.GetComponent<MirageEdgeBase>().enabled = true;
         }
 
         private void WeaponSwitch()
         {
             DeactivateWeapons();
-            if (weapon == "Force Edge")
+            if (weapon == "Mirage Edge")
             {
                 weapon = "Yamato";
+                ActivateYamato();
             } 
             else if (weapon == "Yamato") 
             {
                 weapon = "Beowulf";
-                ActivateYamato();
+                ActivateBeowulf();
             } 
             else if (weapon == "Beowulf" || weapon == null)
             {
-                weapon = "Force Edge";
+                weapon = "Mirage Edge";
+                ActivateMirageEdge();
             }
+            FXHelper.PlayAudio("WeaponSwitch", 1.5f);
+            
         }
 
     }

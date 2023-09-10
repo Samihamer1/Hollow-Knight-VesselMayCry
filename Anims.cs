@@ -3,6 +3,7 @@
     internal static class Anims
     {
 
+        private static bool init = false;
         public static Dictionary<string, List<Sprite>> animationset = new Dictionary<string, List<Sprite>>();
 
         private static void LoadAnimation(string path, string name, int length)
@@ -96,16 +97,44 @@
         //I don't know if any of you noticed, but I can't actually animate.
         public static void AnimationInit()
         {
-            //attack anims
-            LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCut", "JudgementCut", 12);
-            LoadAnimation("VesselMayCry.Resources.YamatoAnims.ComboC", "ComboC", 25);
-            LoadAnimation("VesselMayCry.Resources.YamatoAnims.UpperSlash", "UpperSlash", 3);
-            LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCutEnd", "JudgementCutEnd", 36);
+            if (!init)
+            {
+                init = true;
 
-            //knight anims
-            LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.JudgementCut.set.png", "JC", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 3, 109, 128, false, 0);
-            LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.ComboC.set.png", "ComboC", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 3, 109, 128,true,1);
-            LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.UpperSlash.set.png", "UpperSlash", 60, tk2dSpriteAnimationClip.WrapMode.Once, 4, 130, 128, false, 0);
+                //attack anims
+                LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCut", "JudgementCut", 12);
+                LoadAnimation("VesselMayCry.Resources.YamatoAnims.ComboC", "ComboC", 25);
+                LoadAnimation("VesselMayCry.Resources.YamatoAnims.UpperSlash", "UpperSlash", 3);
+                LoadAnimation("VesselMayCry.Resources.YamatoAnims.JudgementCutEnd", "JudgementCutEnd", 36);
+                LoadAnimation("VesselMayCry.Resources.BeowulfAnims.Shockwave1", "Shockwave1", 4);
+                LoadAnimation("VesselMayCry.Resources.BeowulfAnims.LunarPhase", "LunarPhase", 3);
+                LoadAnimation("VesselMayCry.Resources.MirageEdgeAnims.SpiralSwords", "SpiralSwords", 1);
+                LoadAnimation("VesselMayCry.Resources.MirageEdgeAnims.BlisteringSwords", "BlisteringSwords", 1);
+                LoadAnimation("VesselMayCry.Resources.MirageEdgeAnims.Overdrive", "Overdrive", 1);
+                LoadAnimation("VesselMayCry.Resources.MirageEdgeAnims.OverdriveDissipate", "OverdriveDissipate", 6);
+
+                //knight anims
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.JudgementCut.set.png", "JC", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 3, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.ComboC.set.png", "ComboC", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 3, 109, 128, true, 1);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.UpperSlash.set.png", "UpperSlash", 60, tk2dSpriteAnimationClip.WrapMode.Once, 4, 130, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.JCEDash.set.png", "JCEDash", 25000, tk2dSpriteAnimationClip.WrapMode.Once, 7, 192, 117, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.JCEFinish.set.png", "JCEFinish", 24000, tk2dSpriteAnimationClip.WrapMode.Once, 25, 140, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.AerialCleaveAntic.set.png", "AerialCleaveAntic", 8, tk2dSpriteAnimationClip.WrapMode.Once, 3, 105, 136, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.AerialCleaveFall.set.png", "AerialCleaveFall", 24, tk2dSpriteAnimationClip.WrapMode.Once, 1, 135, 136, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.AerialCleaveSlash.set.png", "AerialCleaveSlash", 24, tk2dSpriteAnimationClip.WrapMode.Once, 3, 135, 136, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.YamatoSlash.set.png", "YamatoSlash", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.YamatoAnims.Knight.YamatoSlashAlt.set.png", "YamatoSlashAlt", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 136, 133, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.StrongPunch.set.png", "StrongPunch", 20, tk2dSpriteAnimationClip.WrapMode.Once, 4, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.LunarPhase.set.png", "LunarPhase", 60, tk2dSpriteAnimationClip.WrapMode.Loop, 6, 130, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.DashPunch.set.png", "DashPunch", 20, tk2dSpriteAnimationClip.WrapMode.Once, 6, 130, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.BeastUppercut.set.png", "BeastUppercut", 50, tk2dSpriteAnimationClip.WrapMode.Once, 7, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.StarfallAntic.set.png", "StarfallAntic", 12, tk2dSpriteAnimationClip.WrapMode.Once, 3, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.StarfallFall.set.png", "StarfallFall", 12, tk2dSpriteAnimationClip.WrapMode.Loop, 1, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.HellOnEarthAntic.set.png", "HellOnEarthAntic", 12, tk2dSpriteAnimationClip.WrapMode.Once, 10, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.HellOnEarthPunch.set.png", "HellOnEarthPunch", 24, tk2dSpriteAnimationClip.WrapMode.Once, 10, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.MirageEdgeAnims.Knight.DeepStinger.set.png", "DeepStinger", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 5, 160, 208, false, 0);
+            }
+            
         }
     }
 }
