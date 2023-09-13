@@ -1,15 +1,11 @@
-﻿using UnityEngine;
-using VesselMayCry.Weapons;
+﻿using VesselMayCry.Weapons;
 
 namespace VesselMayCry
 {
     public class VesselMayCry : Mod
     {
-        private bool switchguibuffer = false;
-
-
         new public string GetName() => "Vessel May Cry";
-        public override string GetVersion() => "Beta 1";
+        public override string GetVersion() => "Beta 2";
 
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -43,12 +39,9 @@ namespace VesselMayCry
             yamato.enabled = false;
             beowulf.enabled = false;
             mirageedge.enabled = false;
-            HeroController.instance.BIG_FALL_TIME = 999;
-            HeroController.instance.NAIL_CHARGE_TIME_CHARM = 0.2f;
-            HeroController.instance.NAIL_CHARGE_TIME_DEFAULT = 0.2f;
+            
             //Quake Invul is now only used for super moves. One of the main compatiblity issues? Maybe try to fix. Not urgent
             HeroController.instance.INVUL_TIME_QUAKE = 3f;
-            On.HutongGames.PlayMaker.Actions.SetFloatValue.OnEnter += FocusSpeed;
 
             //concentration
             HeroController.instance.gameObject.AddComponent<Concentration>();
@@ -59,6 +52,9 @@ namespace VesselMayCry
             //vessel trigger
             HeroController.instance.gameObject.AddComponent<VesselTrigger>();
 
+            //Charms
+            HeroController.instance.gameObject.AddComponent<Charms>();
+
             //switch
             WeaponSwitch();
 
@@ -66,31 +62,12 @@ namespace VesselMayCry
             On.HealthManager.Hit += ModifyNailDamage;
 
 
-
-        }
-
-        private void FocusSpeed(On.HutongGames.PlayMaker.Actions.SetFloatValue.orig_OnEnter orig, SetFloatValue self)
-        {
-            //shoutout to exempt medic
-            if (self.Fsm.GameObject.name == "Knight" && self.Fsm.Name == "Spell Control" && self.State.Name == "Set Focus Speed")
-            {
-                if (self.floatValue.Name == "Time Per MP Drain UnCH")
-                {
-                    self.floatValue.Value = 0.009f;
-                }
-                else if (self.floatValue.Name == "Time Per MP Drain CH")
-                {
-                    self.floatValue.Value = 0.005f;
-                }
-            }
-
-            orig(self);
         }
 
         private void ModifyNailDamage(On.HealthManager.orig_Hit orig, HealthManager self, HitInstance hitInstance)
         {
-            //concentration buff
-            if (hitInstance.AttackType is AttackTypes.Nail)
+            //concentration buff - listen i know i said nail damage but like im not changing the damage type of scream so
+            if (hitInstance.AttackType is AttackTypes.Nail || hitInstance.AttackType is AttackTypes.Spell)
             {               
                 hitInstance.Multiplier += (Concentration.concentrationvalue / Concentration.concentrationmax) * 0.4f;
 
@@ -98,10 +75,26 @@ namespace VesselMayCry
                 hitInstance.Multiplier *= (0.2f + (Style.rank*0.2f));
 
                 //vt buff
-                if (VesselTrigger.inVesselTrigger)
+                if (VesselTrigger.inVesselTrigger && !Charms.hivebloodequipped)
                 {
                     hitInstance.Multiplier *= 1.3f;
                 }               
+                if (VesselTrigger.inVesselTrigger && Charms.hivebloodequipped)
+                {
+                    hitInstance.Multiplier *= 1.1f;
+                }
+                
+                //scream isnt meant to be that good. its only a notch.
+                if (hitInstance.AttackType is AttackTypes.Spell)
+                {
+                    hitInstance.Multiplier *= 0.55f;
+                }
+
+                //bloodthirsty
+                if (Charms.bloodthirstybuff)
+                {
+                    hitInstance.Multiplier *= 1.05f;
+                }
             }
 
             orig(self, hitInstance);

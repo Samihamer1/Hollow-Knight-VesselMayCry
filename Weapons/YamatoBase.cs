@@ -2,7 +2,6 @@
 {
     internal class YamatoBase : MonoBehaviour
     {
-        private bool isattacking = false;
         private bool levitateattack = false;
         private Vector3 pos;
         private bool init = false;
@@ -13,10 +12,10 @@
         private float maxColorG = 0.5f;
 
         private int jcutdamage = 30;
-        private int combocdamage = 15;
+        private int[] combocdamage = { 7, 15 };
         private int upperslashdamage = 25;
-        private int jcedamage = 200;
-        private int aerialcleavedamage = 50;
+        private int[] jcedamage = { 100, 200 };
+        private int[] aerialcleavedamage = { 25, 50 };
 
         //notes
         //remmeber to add color for the mark of pride thing
@@ -29,6 +28,7 @@
             CreateJudgementCutEnd();
             CreateAerialCleave();
             ModifyDashSlash();
+            MPCostRemove();
             init = true;
 
         }
@@ -108,6 +108,13 @@
             pos = HeroController.instance.transform.position;
         }
 
+        //mp cost removal
+        private void MPCostRemove()
+        {
+            PlayMakerFSM spellcontrol = HeroController.instance.spellControl;
+            spellcontrol.GetState("Scream Burst 1").RemoveAction<SendMessage>();
+            spellcontrol.GetState("Scream Burst 2").RemoveAction<SendMessage>();
+        }
 
         private GameObject CreateSingleJCut()
         {
@@ -246,6 +253,7 @@
                     {
 
                         VesselTrigger.Reset();
+                        Concentration.concentrationvalue = 0;
 
                         HeroController.instance.RelinquishControl();
 
@@ -274,10 +282,15 @@
                     }
                     else
                     {
+                        if (Charms.stillvoidequipped)
+                        {
+                            HeroController.instance.spellControl.SendEvent("SCREAM");
+                        }
                         HeroController.instance.spellControl.SendEvent("NEXT");
                     }
                 });
                 combostate.AddTransition("NEXT", "Spell End");
+                combostate.AddTransition("SCREAM", "Level Check 3");
             }
             spellcontrol.ChangeTransition("Has Scream?", "CAST", "Judgement Cut End");
 
@@ -352,7 +365,13 @@
                     hitInstance.CircleDirection = false;
                     hitInstance.Source = gameObject;
 
-                    hitInstance.DamageDealt = jcedamage;
+                    int damagevalue = jcedamage[0];
+                    if (HeroController.instance.playerData.screamLevel > 1)
+                    {
+                        damagevalue = jcedamage[1];
+                    }
+
+                    hitInstance.DamageDealt = damagevalue;
                     HitTaker.Hit(obj[j].gameObject, hitInstance);
                 }
             }
@@ -446,7 +465,14 @@
 
                     //tempdamage
                     ContactDamage damage = cut.AddComponent<ContactDamage>();
-                    damage.SetDamage(aerialcleavedamage);
+
+                    int damagevalue = aerialcleavedamage[0];
+                    if (HeroController.instance.playerData.quakeLevel > 1)
+                    {
+                        damagevalue = aerialcleavedamage[1];
+                    }
+
+                    damage.SetDamage(damagevalue);
                     damage.SetKnockback(1.4f);
                     cut.SetActive(true);
 
@@ -484,7 +510,13 @@
 
                     //tempdamage
                     ContactDamage damage = slices.AddComponent<ContactDamage>();
-                    damage.SetDamage(combocdamage);
+                    int damagevalue = combocdamage[0];
+                    if (HeroController.instance.playerData.fireballLevel > 1)
+                    {
+                        damagevalue = combocdamage[1];
+                    }
+
+                    damage.SetDamage(damagevalue);
                     slices.SetActive(true);
 
                     //thats a lotta coroutines

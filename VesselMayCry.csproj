@@ -294,6 +294,7 @@
     <Compile Remove="Resources\YamatoAnims\Knight\JudgementCut\SpritePositions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\charmtext.json" />
     <None Remove="Resources\vtfg.png" />
   </ItemGroup>
   <ItemGroup>
@@ -301,5 +302,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\YamatoAnims\Knight\JCEDash\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Json.Net" Version="1.0.33" />
   </ItemGroup>
 </Project>

@@ -6,9 +6,10 @@
         public static int rank = 0;
         public static float meter = 0;
         public static float metermax = 60;
-        float meterloss = 7.5f;
-        float[] meterlevels = { 20, 25, 35, 40, 50, 60, 70 };
+        float meterloss = 5.5f;
+        float[] meterlevels = { 30, 40, 60, 70, 85, 100, 130 };
         public static string[] ranks = {"D","C","B","A","S","SS","SSS"};
+        public static string[] ranksCharm = { "B", "A"};
 
         private Dictionary<string, float> MeterGain = new Dictionary<string, float>()
         {
@@ -48,42 +49,36 @@
             
         }
 
+        private void OnDisable()
+        {
+            On.HealthManager.TakeDamage -= AddToList;
+            ModHooks.TakeHealthHook -= LargeLoss;
+        }
+
+
         private int LargeLoss(int damage)
         {
-            float loss = 50;
-            attacklist.Clear();
-            while (meter - loss <= 0)
+            if (Charms.consistencykeyequipped)
             {
-                float totalmeter = 0;
-                for (int i = 0; i < rank; i++)
+                rank = 2;
+                meter = 0;
+                attacklist.Clear();
+            } else
+            {
+                if (rank - 2 < 0)
                 {
-                    totalmeter += meterlevels[i];
-                }
-
-                float newtotalmeter = totalmeter - loss;
-                if (newtotalmeter < 0)
-                {
-                    meter = 0;
                     rank = 0;
-                    return damage;
+                    meter = 0;
+                    attacklist.Clear();
                 }
-
-                int newrank = 0;
-                for (int i = 0; i < meterlevels.Length; i++)
+                else
                 {
-                    if (meterlevels[i] < newtotalmeter)
-                    {
-                        newtotalmeter -= meterlevels[i];
-                        newrank = i;
-                    } else
-                    {
-                        break;
-                    }
+                    rank -= 2;
                 }
-
-                meter = newtotalmeter;
-                rank = newrank;
+                metermax = meterlevels[rank];
+                meter = metermax * 0.3f;
             }
+
             return damage;
         }
 
@@ -95,15 +90,38 @@
                 metermax = meterlevels[rank];
                 if (meter < 0)
                 {
-                    if (rank > 0)
+                    //lazy
+                    if (Charms.consistencykeyequipped)
                     {
-                        rank -= 1;
-                        meter = metermax;
-                    }
-                    else
-                    {
-                        meter = 0;
+                        if (rank > 2)
+                        {
 
+                            rank -= 1;
+                            meter = metermax;
+                        }
+                        else
+                        {
+                            meter = 0;
+
+                        }
+                        if (rank < 2)
+                        {
+                            rank = 2;
+                            meter = 0;
+                        }
+                    } else
+                    {
+                        if (rank > 0)
+                        {
+
+                            rank -= 1;
+                            meter = metermax;
+                        }
+                        else
+                        {
+                            meter = 0;
+
+                        }
                     }
                 }
             }
@@ -136,21 +154,44 @@
             if (attacklist[fullname] < maxuses) {
                 if (MeterGain.ContainsKey(attackname))
                 {
-                    meter += MeterGain[attackname];
+                    AddToMeter(MeterGain[attackname]);
                 } else
                 {
-                    meter += 15;
+                    AddToMeter(15);
                 }
                 
+            }
+        }
+
+        public static void AddToMeter(float val)
+        {
+            meter += val;
+
+            //im lazy
+            if (Charms.consistencykeyequipped)
+            {
+                if (meter > metermax && rank < 3)
+                {
+                    meter = meter - metermax;
+                    rank += 1;
+                }
+                else if (meter > metermax && rank == 3)
+                {
+                    meter = metermax;
+                }
+            } else
+            {
                 if (meter > metermax && rank < 6)
                 {
                     meter = meter - metermax;
                     rank += 1;
-                } else if (meter > metermax && rank == 6)
+                }
+                else if (meter > metermax && rank == 6)
                 {
                     meter = metermax;
                 }
             }
+           
         }
     }
 }

@@ -46,9 +46,8 @@ namespace VesselMayCry.ExtraSystems
             hitInstance.MoveAngle = 180;
             hitInstance.Source = gameObject;
             hitInstance.SpecialType = SpecialTypes.None;
-
-
             hitInstance.DamageDealt = damagenumber;
+
             HitTaker.Hit(obj, hitInstance);
 
             if (gameObject.name == "Starfall")
@@ -64,6 +63,11 @@ namespace VesselMayCry.ExtraSystems
             if (gameObject.name == "Round Trip")
             {
                 HeroController.instance.GetComponent<MirageEdgeBase>().StopRoundTrip();
+            }
+
+            if (Charms.purefocusequipped)
+            {
+                Concentration.AddConcentration(2.5f);
             }
         }
 

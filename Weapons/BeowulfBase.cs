@@ -10,11 +10,11 @@ namespace VesselMayCry.Weapons
         private bool init = false;
 
         private int strongpunchdmg = 30;
-        private int lunarphasedmg = 15;
+        private int[] lunarphasedmg = {8, 15};
         private int uppercutdmg = 25;
         private int dashpunchdmg = 20;
-        private int starfalldmg = 20;
-        private int hellonearthdmg = 300;
+        private int[] starfalldmg = {15, 30};
+        private int[] hellonearthdmg = {200, 300};
         private float level2multiplier = 2.5f;
 
         public void Awake()
@@ -55,6 +55,13 @@ namespace VesselMayCry.Weapons
 
         public void Update()
         {
+            if (Charms.quickfistsequipped)
+            {
+                chargetime = 0.6f;
+            } else
+            {
+                chargetime = 1.2f;
+            }
             if (FXHelper.nachargeeffect.activeSelf)
             {
                 chargetimer += Time.deltaTime;
@@ -100,6 +107,10 @@ namespace VesselMayCry.Weapons
                     }
                     else
                     {
+                        if (Charms.stillvoidequipped)
+                        {
+                            HeroController.instance.spellControl.SendEvent("SCREAM");
+                        }
                         HeroController.instance.spellControl.SendEvent("CANCEL");
                     }
                 });
@@ -159,6 +170,7 @@ namespace VesselMayCry.Weapons
                 {
                     //swap it
                     VesselTrigger.Reset();
+                    Concentration.concentrationvalue = 0;
 
 
                     FXHelper.ActivateEffect("HellOnEarthBurst");
@@ -171,7 +183,13 @@ namespace VesselMayCry.Weapons
 
                     GameObject damage = GeneralHelper.CreateAttackTemplate("Hell On Earth", 1f, 1f, HeroController.instance.transform.position, new Vector2(22,10), new Vector2(0,0));
                     ContactDamage dmg = damage.AddComponent<ContactDamage>();
-                    dmg.SetDamage(hellonearthdmg);
+                    int damagevalue = hellonearthdmg[0];
+                    if (HeroController.instance.playerData.screamLevel > 1)
+                    {
+                        damagevalue = hellonearthdmg[1];
+                    }
+
+                    dmg.SetDamage(damagevalue);
                     StartCoroutine(GeneralHelper.DestroyAfter(damage,0.1f));
                 });
 
@@ -188,6 +206,7 @@ namespace VesselMayCry.Weapons
                 punchstate.AddTransition("ANIM END", "Hell On Earth");
                 combostate.AddTransition("NEXT", "Hell On Earth Antic");
                 combostate.AddTransition("CANCEL", "Spell End");
+                combostate.AddTransition("SCREAM", "Level Check 3");
                 shockwavestate.AddTransition("NEXT", "Spell End");
             }
             spellcontrol.ChangeTransition("Has Scream?", "CAST", "Hell On Earth Check");
@@ -353,31 +372,37 @@ namespace VesselMayCry.Weapons
                 spellcontrol.GetState("Can Cast? QC").GetAction<IntCompare>().integer2 = 0;
                 combostate.AddMethod(() =>
                 {
-                        HeroController.instance.RelinquishControl();
+                    HeroController.instance.RelinquishControl();
 
-                        GameObject slices = GeneralHelper.CreateAttackTemplate("Starfall", 2f, 2f, HeroController.instance.transform, new Vector3(0, -1f, 0));
-                        slices.GetComponent<Rigidbody2D>().Destroy();
-                        SpriteRenderer render = slices.GetComponent<SpriteRenderer>();
+                    GameObject slices = GeneralHelper.CreateAttackTemplate("Starfall", 2f, 2f, HeroController.instance.transform, new Vector3(0, -1f, 0));
+                    slices.GetComponent<Rigidbody2D>().Destroy();
+                    SpriteRenderer render = slices.GetComponent<SpriteRenderer>();
 
-                        //tempdamage
-                        ContactDamage damage = slices.AddComponent<ContactDamage>();
-                        damage.SetDamage(starfalldmg);
-                        damage.SetPogo();
-                        slices.SetActive(true);
+                    //tempdamage
+                    ContactDamage damage = slices.AddComponent<ContactDamage>();
+                    int damagevalue = starfalldmg[0];
+                    if (HeroController.instance.playerData.quakeLevel > 1)
+                    {
+                        damagevalue = starfalldmg[1];
+                    }
 
-                        //fx
-                        FXHelper.ActivateEffect("SharpFlashS");
+                    damage.SetDamage(damagevalue);
+                    damage.SetPogo();
+                    slices.SetActive(true);
 
-                        combostate.GetAction<SetVelocity2d>().x = -15 * HeroController.instance.transform.GetScaleX();
+                    //fx
+                    FXHelper.ActivateEffect("SharpFlashS");
 
-                        HeroController.instance.gameObject.Child("Attacks").Child("Slash").GetComponent<UnityEngine.AudioSource>().Play();
+                    combostate.GetAction<SetVelocity2d>().x = -15 * HeroController.instance.transform.GetScaleX();
 
-                        StartCoroutine(DestroyStarfallHitbox(slices));
+                    HeroController.instance.gameObject.Child("Attacks").Child("Slash").GetComponent<UnityEngine.AudioSource>().Play();
 
-                        //anim
-                        tk2dSpriteAnimator animator = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
-                        HeroController.instance.StopAnimationControl();
-                        animator.Play("StarfallFall");
+                    StartCoroutine(DestroyStarfallHitbox(slices));
+
+                    //anim
+                    tk2dSpriteAnimator animator = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
+                    HeroController.instance.StopAnimationControl();
+                    animator.Play("StarfallFall");
                 });
 
                 FsmState poststate = spellcontrol.CreateState("StarfallVelo");
@@ -565,7 +590,13 @@ namespace VesselMayCry.Weapons
 
                     //tempdamage
                     ContactDamage damage = slices.AddComponent<ContactDamage>();
-                    damage.SetDamage(lunarphasedmg);
+                    int damagevalue = lunarphasedmg[0];
+                    if (HeroController.instance.playerData.fireballLevel > 1)
+                    {
+                        damagevalue = lunarphasedmg[1];
+                    }
+
+                    damage.SetDamage(damagevalue);
                     slices.SetActive(true);
 
                     //fx

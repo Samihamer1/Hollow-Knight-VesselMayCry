@@ -10,6 +10,7 @@ namespace VesselMayCry
         public static float concentrationlevel2 = 60;
         private static float nailconcentration = 7;
 
+
         private void Start()
         {
             ModHooks.SlashHitHook += Gain;
@@ -36,11 +37,12 @@ namespace VesselMayCry
                 if (manager != null && gainconcentration == true)
                 {
                     gainconcentration = false;
-                    concentrationvalue += nailconcentration;
-                    if (concentrationvalue > concentrationmax)
+                    float conc = nailconcentration;
+                    if (Charms.purefocusequipped)
                     {
-                        concentrationmax = concentrationvalue;
+                        conc = 2.5f;
                     }
+                    AddConcentration(conc);
                 }
             }
 
@@ -56,7 +58,7 @@ namespace VesselMayCry
                 yield return new WaitForSeconds(HeroController.instance.ATTACK_COOLDOWN_TIME);
             }
             
-            if (gainconcentration)
+            if (gainconcentration && !Charms.slashscopeequipped)
             {
                 concentrationvalue -= nailconcentration;
                 if (concentrationvalue < 0)
@@ -71,13 +73,39 @@ namespace VesselMayCry
         }
         private int ConcentrationReset(int damage)
         {
-            concentrationvalue = 0;
+            if (Charms.strongmindequipped)
+            {
+                if (concentrationvalue - concentrationmax / 2 > 0)
+                {
+                    concentrationvalue -= concentrationmax / 2;
+                } else
+                {
+                    concentrationvalue = 0;
+                }
+            }
+            else
+            {
+                concentrationvalue = 0;
+            }
             return damage;
         }
 
         private void ResetGain()
         {
             gainconcentration = true;
+        }
+
+        public static void AddConcentration(float amount)
+        {
+            concentrationvalue += amount;
+            if (concentrationvalue > concentrationmax)
+            {
+                concentrationvalue = concentrationmax;
+            }
+            if (concentrationvalue < 0)
+            {
+                concentrationvalue = 0;
+            }
         }
     }
 }

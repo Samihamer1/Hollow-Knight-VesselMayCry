@@ -12,13 +12,13 @@ namespace VesselMayCry.Weapons
         private bool roundtripmoving = false;
         private bool overdriveactive = false;
 
-        private int spiraldmg = 8;
-        private int blisteringdmg = 7;
+        private int[] spiraldmg = { 5, 10 };
+        private int[] blisteringdmg = { 7, 12 };
         private int roundtripdmg = 25;
         private int overdrivedmg = 15;
         private int drivedmg = 12;
-        private int deepstingerdmg = 25;
-        private int finalhitdmg = 40;
+        private int[] deepstingerdmg = {8,15};
+        private int finalhitdmg = 30;
 
         public void Awake()
         {
@@ -83,6 +83,10 @@ namespace VesselMayCry.Weapons
                     }
                     else
                     {
+                        if (Charms.stillvoidequipped)
+                        {
+                            HeroController.instance.spellControl.SendEvent("SCREAM");
+                        }
                         HeroController.instance.spellControl.SendEvent("CANCEL");
                     }
                 });
@@ -119,12 +123,16 @@ namespace VesselMayCry.Weapons
                     FXHelper.CameraShake(2);
                     //FXHelper.PlayAudio("HellOnEarthSpark", 1f);
 
-                    int damagevalue = 15;
-
                     GameObject damage = GeneralHelper.CreateAttackTemplate("Deep Stinger", 1f, 1f, HeroController.instance.transform, new Vector3(0, 0), new Vector2(5, 5), new Vector2(0, 0));
                     DamageEnemies dmg = damage.AddComponent<DamageEnemies>();
                     dmg.attackType = AttackTypes.Nail;
-                    dmg.damageDealt = deepstingerdmg;
+                    int damagevalue = deepstingerdmg[0];
+                    if (HeroController.instance.playerData.screamLevel > 1)
+                    {
+                        damagevalue = deepstingerdmg[1];
+                    }
+
+                    dmg.damageDealt = damagevalue;
                     dmg.magnitudeMult = 0;
                     dmg.ignoreInvuln = false;
 
@@ -215,6 +223,7 @@ namespace VesselMayCry.Weapons
                 finalstrike.AddTransition("NEXT", "Spell End");
                 anticstate.AddTransition("ANIM END", "Deep Stinger");
                 combostate.AddTransition("NEXT", "Deep Stinger Antic");
+                combostate.AddTransition("SCREAM", "Level Check 3");
                 combostate.AddTransition("CANCEL", "Spell End");
                 spinstate.AddTransition("LEFT", "Stinger Left");
                 spinstate.AddTransition("RIGHT", "Stinger Right");
@@ -236,6 +245,7 @@ namespace VesselMayCry.Weapons
             HeroController.instance.spellControl.SendEvent("NEXT");
             HeroController.instance.AffectedByGravity(true);
             VesselTrigger.Reset();
+            Concentration.concentrationvalue = 0;
         }
 
         private void CreateOverdrive()
@@ -313,7 +323,7 @@ namespace VesselMayCry.Weapons
             while (damage)
             {
                 damage.HitAgain();
-                FXHelper.PlayAudio("ButterflyBlade", 0.35f);
+                FXHelper.PlayAudio("ButterflyBlade", 0.2f);
                 yield return new WaitForSeconds(0.25f);
 
             }
@@ -527,7 +537,12 @@ namespace VesselMayCry.Weapons
 
                 //tempdamage
                 ContactDamage damage = slices.AddComponent<ContactDamage>();
-                damage.SetDamage(blisteringdmg);
+                int damagevalue = blisteringdmg[0];
+                if (HeroController.instance.playerData.fireballLevel > 1)
+                {
+                    damagevalue = blisteringdmg[1];
+                }
+                damage.SetDamage(damagevalue);
                 damage.SetExtraOnly();
 
                 StartCoroutine(Anims.PlayAnimation("BlisteringSwords", render, 5f));
@@ -589,7 +604,13 @@ namespace VesselMayCry.Weapons
 
                         //tempdamage
                         ContactDamage damage = slices.AddComponent<ContactDamage>();
-                        damage.SetDamage(spiraldmg);
+                        int damagevalue = spiraldmg[0];
+                        if (HeroController.instance.playerData.quakeLevel > 1)
+                        {
+                            damagevalue = spiraldmg[1];
+                        }
+
+                        damage.SetDamage(damagevalue);
                         damage.DisableAuto();
                         damage.SetExtra();
                         

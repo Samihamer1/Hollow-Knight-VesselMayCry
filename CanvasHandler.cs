@@ -24,12 +24,12 @@ namespace VesselMayCry
         private GameObject stylefg;
         private GameObject ranktext;
         private GameObject vtfg;
+        private GameObject vtfghive;
         private GameObject vtbg;
         private GameObject beowulfimage;
         private GameObject mirageimage;
         private GameObject yamatoimage;
 
-        private PlayMakerFSM blanker;
         private PlayMakerFSM blankerwhite;
         private PlayMakerFSM tk2dblanker;
 
@@ -72,6 +72,9 @@ namespace VesselMayCry
             vtfg = CreatePanel("VesselMayCry.Resources.vtfg.png", vtscale, vtpos, true);
             vtfg.name = "VTFG";
 
+            vtfghive = CreatePanel("VesselMayCry.Resources.vtfghive.png", vtscale, vtpos, true);
+            vtfg.name = "VTFGHive";
+
             yamatoimage = CreatePanel("VesselMayCry.Resources.Images.Yamato.png", vtscale, primarypos, false);
             beowulfimage = CreatePanel("VesselMayCry.Resources.Images.Beowulf.png", vtscale, primarypos, false);
             mirageimage = CreatePanel("VesselMayCry.Resources.Images.MirageEdge.png", vtscale, primarypos, false);
@@ -102,6 +105,7 @@ namespace VesselMayCry
             {
                 vtbg.SetActive(val);
                 vtfg.SetActive(val);
+                vtfghive.SetActive(val);
             }
         }
 
@@ -177,6 +181,17 @@ namespace VesselMayCry
                     SetFill(vtfg, VesselTrigger.vtval / VesselTrigger.vtmax);
                     vtbg.GetComponent<RectTransform>().localPosition = vtpos;
                     vtfg.GetComponent<RectTransform>().localPosition = vtpos;
+
+                    vtfghive.GetComponent<RectTransform>().localPosition = vtpos;
+                    if (Charms.hivebloodequipped)
+                    {
+                        vtfghive.SetActive(true);
+                        vtfg.SetActive(false);
+                    } else
+                    {
+                        vtfghive.SetActive(false);
+                        vtfg.SetActive(true);
+                    }
                 }
 
                 if (style == null)
