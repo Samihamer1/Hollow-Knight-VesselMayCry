@@ -1,7 +1,7 @@
 ﻿using FrogCore.Ext;
 using VesselMayCry.Weapons;
 
-namespace VesselMayCry
+namespace VesselMayCry.Helpers
 {
     internal class GeneralHelper : MonoBehaviour
     {
@@ -68,7 +68,7 @@ namespace VesselMayCry
             {
                 HeroController.instance.spellControl.SendEvent("NEXT");
             }
-            else if (spellstate == "Inactive" &&  nailartstate == HeroController.instance.gameObject.LocateMyFSM("Nail Arts").ActiveStateName)
+            else if (spellstate == "Inactive" && nailartstate == HeroController.instance.gameObject.LocateMyFSM("Nail Arts").ActiveStateName)
             {
                 HeroController.instance.gameObject.LocateMyFSM("Nail Arts").SendEvent("NEXT");
             }

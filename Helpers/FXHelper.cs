@@ -3,7 +3,7 @@ using System;
 using System.Security.Policy;
 using UnityEngine;
 
-namespace VesselMayCry
+namespace VesselMayCry.Helpers
 {
     internal class FXHelper : MonoBehaviour
     {
@@ -33,8 +33,8 @@ namespace VesselMayCry
 
         public static AudioSource knightaudio;
 
-        private static Dictionary<string, AudioClip> audioclips = new Dictionary<string, AudioClip> ();
-        private static Dictionary<string, GameObject> effects = new Dictionary<string, GameObject> ();
+        private static Dictionary<string, AudioClip> audioclips = new Dictionary<string, AudioClip>();
+        private static Dictionary<string, GameObject> effects = new Dictionary<string, GameObject>();
         private static string[] cameralevels = new string[3];
 
         public static void Initialise()
@@ -114,17 +114,17 @@ namespace VesselMayCry
             cameralevels[0] = "SmallShake";
             cameralevels[1] = "AverageShake";
             cameralevels[2] = "BigShake";
-            
+
         }
 
-        public static void PlayAudio(string name, float volumemultiplier) 
+        public static void PlayAudio(string name, float volumemultiplier)
         {
             if (audioclips.ContainsKey(name))
             {
                 knightaudio.pitch = 1f;
                 knightaudio.PlayOneShot(audioclips[name], GameManager.instance.GetImplicitCinematicVolume() * volumemultiplier);
             }
-        } 
+        }
 
         public static void PlayAudioRandomPitch(string name, float volumemultiplier)
         {

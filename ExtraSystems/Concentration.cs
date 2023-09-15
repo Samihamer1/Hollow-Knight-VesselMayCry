@@ -28,6 +28,12 @@ namespace VesselMayCry
             ModHooks.AfterAttackHook -= Lose;
 
         }
+
+        public static void Reset()
+        {
+            concentrationvalue = 0;
+        }
+
         private void Gain(Collider2D otherCollider, GameObject slash)
         {
             //filter collider

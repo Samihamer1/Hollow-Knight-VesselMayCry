@@ -1,4 +1,4 @@
-﻿namespace VesselMayCry
+﻿namespace VesselMayCry.Helpers
 {
     public class WavUtil
     {
@@ -29,7 +29,7 @@
             //string riff = Encoding.ASCII.GetString (fileBytes, 0, 4);
             //string wave = Encoding.ASCII.GetString (fileBytes, 8, 4);
             int subchunk1 = BitConverter.ToInt32(fileBytes, 16);
-            UInt16 audioFormat = BitConverter.ToUInt16(fileBytes, 20);
+            ushort audioFormat = BitConverter.ToUInt16(fileBytes, 20);
 
             // NB: Only uncompressed PCM wav files are supported.
             string formatCode = FormatCode(audioFormat);
@@ -37,11 +37,11 @@
                 "Detected format code '{0}' {1}, but only PCM and WaveFormatExtensable uncompressed formats are currently supported.",
                 audioFormat, formatCode);
 
-            UInt16 channels = BitConverter.ToUInt16(fileBytes, 22);
+            ushort channels = BitConverter.ToUInt16(fileBytes, 22);
             int sampleRate = BitConverter.ToInt32(fileBytes, 24);
             //int byteRate = BitConverter.ToInt32 (fileBytes, 28);
             //UInt16 blockAlign = BitConverter.ToUInt16 (fileBytes, 32);
-            UInt16 bitDepth = BitConverter.ToUInt16(fileBytes, 34);
+            ushort bitDepth = BitConverter.ToUInt16(fileBytes, 34);
 
             int headerOffset = 16 + 4 + subchunk1 + 4;
             int subchunk2 = BitConverter.ToInt32(fileBytes, headerOffset);
@@ -66,7 +66,7 @@
                     throw new Exception(bitDepth + " bit depth is not supported.");
             }
 
-            AudioClip audioClip = AudioClip.Create(name, data.Length / channels, (int)channels, sampleRate, false);
+            AudioClip audioClip = AudioClip.Create(name, data.Length / channels, channels, sampleRate, false);
             audioClip.SetData(data, 0);
             return audioClip;
         }
@@ -88,7 +88,7 @@
             int i = 0;
             while (i < wavSize)
             {
-                data[i] = Mathf.Clamp((source[i] / maxValue) - 1.0f, -1.0f, 1.0f);
+                data[i] = Mathf.Clamp(source[i] / maxValue - 1.0f, -1.0f, 1.0f);
                 ++i;
             }
 
@@ -103,12 +103,12 @@
                 "Failed to get valid 16-bit wav size: {0} from data bytes: {1} at offset: {2}", wavSize, dataSize,
                 headerOffset);
 
-            int x = sizeof(Int16); // block size = 2
+            int x = sizeof(short); // block size = 2
             int convertedSize = wavSize / x;
 
             float[] data = new float[convertedSize];
 
-            Int16 maxValue = Int16.MaxValue;
+            short maxValue = short.MaxValue;
 
             int offset = 0;
             int i = 0;
@@ -136,7 +136,7 @@
             int x = 3; // block size = 3
             int convertedSize = wavSize / x;
 
-            int maxValue = Int32.MaxValue;
+            int maxValue = int.MaxValue;
 
             float[] data = new float[convertedSize];
 
@@ -170,7 +170,7 @@
             int x = sizeof(float); //  block size = 4
             int convertedSize = wavSize / x;
 
-            Int32 maxValue = Int32.MaxValue;
+            int maxValue = int.MaxValue;
 
             float[] data = new float[convertedSize];
 
@@ -205,7 +205,7 @@
             const int headerSize = 44;
 
             // get bit depth
-            UInt16 bitDepth = 16; //BitDepth (audioClip);
+            ushort bitDepth = 16; //BitDepth (audioClip);
 
             // NB: Only supports 16 bit
             //Debug.AssertFormat (bitDepth == 16, "Only converting 16 bit is currently supported. The audio clip data is {0} bit.", bitDepth);
@@ -269,7 +269,7 @@
             return count;
         }
 
-        private static int WriteFileFormat(ref MemoryStream stream, int channels, int sampleRate, UInt16 bitDepth)
+        private static int WriteFileFormat(ref MemoryStream stream, int channels, int sampleRate, ushort bitDepth)
         {
             int count = 0;
             int total = 24;
@@ -280,10 +280,10 @@
             int subchunk1Size = 16; // 24 - 8
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(subchunk1Size), "SUBCHUNK_SIZE");
 
-            UInt16 audioFormat = 1;
+            ushort audioFormat = 1;
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(audioFormat), "AUDIO_FORMAT");
 
-            UInt16 numChannels = Convert.ToUInt16(channels);
+            ushort numChannels = Convert.ToUInt16(channels);
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(numChannels), "CHANNELS");
 
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(sampleRate), "SAMPLE_RATE");
@@ -291,7 +291,7 @@
             int byteRate = sampleRate * channels * BytesPerSample(bitDepth);
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(byteRate), "BYTE_RATE");
 
-            UInt16 blockAlign = Convert.ToUInt16(channels * BytesPerSample(bitDepth));
+            ushort blockAlign = Convert.ToUInt16(channels * BytesPerSample(bitDepth));
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(blockAlign), "BLOCK_ALIGN");
 
             count += WriteBytesToMemoryStream(ref stream, BitConverter.GetBytes(bitDepth), "BITS_PER_SAMPLE");
@@ -302,7 +302,7 @@
             return count;
         }
 
-        private static int WriteFileData(ref MemoryStream stream, AudioClip audioClip, UInt16 bitDepth)
+        private static int WriteFileData(ref MemoryStream stream, AudioClip audioClip, ushort bitDepth)
         {
             int count = 0;
             int total = 8;
@@ -336,9 +336,9 @@
         {
             MemoryStream dataStream = new MemoryStream();
 
-            int x = sizeof(Int16);
+            int x = sizeof(short);
 
-            Int16 maxValue = Int16.MaxValue;
+            short maxValue = short.MaxValue;
 
             int i = 0;
             while (i < data.Length)
@@ -373,28 +373,28 @@
         /// </summary>
         /// <returns>The bit depth. Should be 8 or 16 or 32 bit.</returns>
         /// <param name="audioClip">Audio clip.</param>
-        public static UInt16 BitDepth(AudioClip audioClip)
+        public static ushort BitDepth(AudioClip audioClip)
         {
-            UInt16 bitDepth =
+            ushort bitDepth =
                 Convert.ToUInt16(audioClip.samples * audioClip.channels * audioClip.length / audioClip.frequency);
             Debug.AssertFormat(bitDepth == 8 || bitDepth == 16 || bitDepth == 32,
                 "Unexpected AudioClip bit depth: {0}. Expected 8 or 16 or 32 bit.", bitDepth);
             return bitDepth;
         }
 
-        private static int BytesPerSample(UInt16 bitDepth)
+        private static int BytesPerSample(ushort bitDepth)
         {
             return bitDepth / 8;
         }
 
-        private static int BlockSize(UInt16 bitDepth)
+        private static int BlockSize(ushort bitDepth)
         {
             switch (bitDepth)
             {
                 case 32:
-                    return sizeof(Int32); // 32-bit -> 4 bytes (Int32)
+                    return sizeof(int); // 32-bit -> 4 bytes (Int32)
                 case 16:
-                    return sizeof(Int16); // 16-bit -> 2 bytes (Int16)
+                    return sizeof(short); // 16-bit -> 2 bytes (Int16)
                 case 8:
                     return sizeof(sbyte); // 8-bit -> 1 byte (sbyte)
                 default:
@@ -402,7 +402,7 @@
             }
         }
 
-        private static string FormatCode(UInt16 code)
+        private static string FormatCode(ushort code)
         {
             switch (code)
             {

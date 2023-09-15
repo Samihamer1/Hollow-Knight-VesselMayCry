@@ -1,4 +1,5 @@
 ﻿using Vasi;
+using VesselMayCry.Helpers;
 using static UnityEngine.ParticleSystem;
 
 namespace VesselMayCry
@@ -15,27 +16,27 @@ namespace VesselMayCry
         private void Start()
         {
             AddVT();
-            ModHooks.TakeDamageHook += SafetyNet;
+            ModHooks.AfterTakeDamageHook += SafetyNet;
 
         }
 
         private void OnDisable()
         {
-            ModHooks.TakeDamageHook -= SafetyNet;
+            ModHooks.AfterTakeDamageHook -= SafetyNet;
         }
 
-        private int SafetyNet(ref int hazardType, int damage)
+        private int SafetyNet(int hazardType, int damageAmount)
         {
-            if (inVesselTrigger && damage > HeroController.instance.playerData.health + HeroController.instance.playerData.healthBlue && !Charms.hivebloodequipped)
+            if (inVesselTrigger && damageAmount >= HeroController.instance.playerData.health + HeroController.instance.playerData.healthBlue && !Charms.hivebloodequipped)
             {
-                int postval = vtval - damage;
-                if (postval < 0)
+                int postval = vtval - damageAmount;
+                if (postval >= 0)
                 {
                     SetVTVal(postval);
                     return 0;
                 }
             }
-            return damage;
+            return damageAmount;
         }
 
         public static void SetVTVal(int val)
@@ -45,6 +46,7 @@ namespace VesselMayCry
             HeroController.instance.spellControl.GetOrCreateInt("HP").Value = (int)val;
             HeroController.instance.spellControl.GetOrCreateInt("Max HP").Value = (int)vtmax;
         }
+
 
         private void ActivateVesselTrigger()
         {

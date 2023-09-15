@@ -58,6 +58,12 @@ namespace VesselMayCry
             ModHooks.TakeHealthHook -= LargeLoss;
         }
 
+        public static void Reset()
+        { 
+            meter = 0;
+            rank = 0;
+            
+        }
 
         private int LargeLoss(int damage)
         {

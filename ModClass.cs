@@ -1,4 +1,5 @@
-﻿using VesselMayCry.Weapons;
+﻿using VesselMayCry.Helpers;
+using VesselMayCry.Weapons;
 
 namespace VesselMayCry
 {
@@ -61,7 +62,18 @@ namespace VesselMayCry
             //damage mods
             On.HealthManager.Hit += ModifyNailDamage;
 
+            //reset stuff on mp clear
+            On.HeroController.ClearMP += ClearAll;
 
+
+        }
+
+        private void ClearAll(On.HeroController.orig_ClearMP orig, HeroController self)
+        {
+            orig.Invoke(self);
+            Style.Reset();
+            VesselTrigger.Reset();
+            Concentration.Reset();
         }
 
         private void ModifyNailDamage(On.HealthManager.orig_Hit orig, HealthManager self, HitInstance hitInstance)

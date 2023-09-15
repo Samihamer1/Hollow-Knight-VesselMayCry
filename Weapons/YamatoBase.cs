@@ -1,4 +1,6 @@
-﻿namespace VesselMayCry.Weapons
+﻿using VesselMayCry.Helpers;
+
+namespace VesselMayCry.Weapons
 {
     internal class YamatoBase : MonoBehaviour
     {
