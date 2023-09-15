@@ -1,4 +1,6 @@
-﻿namespace VesselMayCry
+﻿using VesselMayCry.Weapons;
+
+namespace VesselMayCry
 {
     internal class Style: MonoBehaviour
     {
@@ -7,6 +9,7 @@
         public static float meter = 0;
         public static float metermax = 60;
         float meterloss = 5.5f;
+        float beowulfmeterloss = 3f;
         float[] meterlevels = { 30, 40, 60, 70, 85, 100, 130 };
         public static string[] ranks = {"D","C","B","A","S","SS","SSS"};
         public static string[] ranksCharm = { "B", "A"};
@@ -86,7 +89,13 @@
         {
             if (!HeroController.instance.cState.isPaused)
             {
-                meter -= (meterloss * Time.deltaTime);
+                if (BeowulfBase.beowulfcharging)
+                {
+                    meter -= (beowulfmeterloss * Time.deltaTime);
+                } else
+                {
+                    meter -= (meterloss * Time.deltaTime);
+                }
                 metermax = meterlevels[rank];
                 if (meter < 0)
                 {

@@ -5,10 +5,11 @@ namespace VesselMayCry
 {
     internal class VesselTrigger : MonoBehaviour
     {
-        public static float vtval = 0;
-        public static float vtmax = 5;
+        public static int vtval = 0;
+        public static int vtmax = 5;
         private static ParticleSystem newpart;
         public static bool inVesselTrigger = false;
+        private static bool inHiveTrigger = false;
 
 
         private void Start()
@@ -27,7 +28,7 @@ namespace VesselMayCry
         {
             if (inVesselTrigger && damage > HeroController.instance.playerData.health + HeroController.instance.playerData.healthBlue && !Charms.hivebloodequipped)
             {
-                float postval = vtval - damage;
+                int postval = vtval - damage;
                 if (postval < 0)
                 {
                     SetVTVal(postval);
@@ -37,7 +38,7 @@ namespace VesselMayCry
             return damage;
         }
 
-        public static void SetVTVal(float val)
+        public static void SetVTVal(int val)
         {
             //The HP ints are now used for VT values as focus is no longer dependent on your max hp.
             vtval = val;
@@ -91,7 +92,10 @@ namespace VesselMayCry
             {
                 if (count % 3 == 0)
                 {
-                    AddHealth(1);
+                    if (!Charms.overkillvowequipped)
+                    {
+                        AddHealth(1);
+                    }
                     SetVTVal(vtval -= 1);
                     if (vtval == 0)
                     {
@@ -146,28 +150,41 @@ namespace VesselMayCry
 
         public static IEnumerator ActivateHiveTrigger()
         {
-            ParticleSystem particles = HeroController.instance.gameObject.Child("Charm Effects").Child("Fury").GetComponent<ParticleSystem>();
-            newpart = Instantiate(particles, HeroController.instance.transform);
-            // i do not care
-#pragma warning disable CS0618 // Type or member is obsolete
-            newpart.startColor = new Color(1f, 0.95f, 0.05f, 1);
-#pragma warning restore CS0618 // Type or member is obsolete
-            newpart.Play();
-            float count = 0;
-            while (Charms.hivebloodequipped)
+            if (!inHiveTrigger)
             {
-                inVesselTrigger = true;
+                inHiveTrigger = true;
 
-                count++;
-                if (count % 7 == 0)
+                ParticleSystem particles = HeroController.instance.gameObject.Child("Charm Effects").Child("Fury").GetComponent<ParticleSystem>();
+                newpart = Instantiate(particles, HeroController.instance.transform);
+                newpart.name = "HiveFury";
+                // i do not care
+#pragma warning disable CS0618 // Type or member is obsolete
+                newpart.startColor = new Color(1f, 0.95f, 0.05f, 1);
+#pragma warning restore CS0618 // Type or member is obsolete
+                newpart.Play();
+                float count = 0;
+                float val = 9;
+                if (Charms.deephealingequipped)
                 {
-                    AddHealth(1);
+                    val = 16;
                 }
+                while (Charms.hivebloodequipped)
+                {
+                    inVesselTrigger = true;
 
-                yield return new WaitForSeconds(1);
+                    count++;
+                    if (count % val == 0)
+                    {
+                        AddHealth(1);
+                    }
+
+                    yield return new WaitForSeconds(1);
+                }
+                Destroy(newpart);
+                inVesselTrigger = false;
+                inHiveTrigger = false;
             }
-            Destroy(newpart);
-            inVesselTrigger = false;
+            
         }
 
     }

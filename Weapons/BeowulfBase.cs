@@ -9,6 +9,8 @@ namespace VesselMayCry.Weapons
         private float chargetime = 1.2f;
         private bool init = false;
 
+        public static bool beowulfcharging = false;
+
         private int strongpunchdmg = 30;
         private int[] lunarphasedmg = {8, 15};
         private int uppercutdmg = 25;
@@ -40,10 +42,10 @@ namespace VesselMayCry.Weapons
 
             tk2dSpriteAnimator animator = HeroController.instance.gameObject.GetComponent<tk2dSpriteAnimator>();
             tk2dSpriteAnimationClip slashclip = animator.GetClipByName("Slash");
-            slashclip.CopyFrom(animator.GetClipByName("YamatoSlash"));
+            slashclip.CopyFrom(animator.GetClipByName("BeowulfSlash"));
             slashclip.name = "Slash";
             tk2dSpriteAnimationClip slashaltclip = animator.GetClipByName("SlashAlt");
-            slashaltclip.CopyFrom(animator.GetClipByName("YamatoSlashAlt"));
+            slashaltclip.CopyFrom(animator.GetClipByName("BeowulfSlashAlt"));
             slashaltclip.name = "SlashAlt";
         }
 
@@ -64,6 +66,7 @@ namespace VesselMayCry.Weapons
             }
             if (FXHelper.nachargeeffect.activeSelf)
             {
+                beowulfcharging = true;
                 chargetimer += Time.deltaTime;
                 if (chargetimer > chargetime)
                 {
@@ -81,6 +84,7 @@ namespace VesselMayCry.Weapons
                 }
             } else
             {
+                beowulfcharging = false;
                 charged = false;
                 chargetimer = 0;
             }
@@ -181,7 +185,7 @@ namespace VesselMayCry.Weapons
                     FXHelper.ActivateEffect("Q Slam");
                     FXHelper.PlayAudio("HellOnEarthBurst", 1f);
 
-                    GameObject damage = GeneralHelper.CreateAttackTemplate("Hell On Earth", 1f, 1f, HeroController.instance.transform.position, new Vector2(22,10), new Vector2(0,0));
+                    GameObject damage = GeneralHelper.CreateAttackTemplate("Hell On Earth", 1f, 1f, HeroController.instance.transform.position, new Vector2(18.5f,10), new Vector2(0,0));
                     ContactDamage dmg = damage.AddComponent<ContactDamage>();
                     int damagevalue = hellonearthdmg[0];
                     if (HeroController.instance.playerData.screamLevel > 1)

@@ -12,10 +12,10 @@ namespace VesselMayCry.Weapons
         private bool roundtripmoving = false;
         private bool overdriveactive = false;
 
-        private int[] spiraldmg = { 5, 10 };
-        private int[] blisteringdmg = { 7, 12 };
+        private int[] spiraldmg = { 5, 8 };
+        private int[] blisteringdmg = { 7, 10 };
         private int roundtripdmg = 25;
-        private int overdrivedmg = 15;
+        private int overdrivedmg = 12;
         private int drivedmg = 12;
         private int[] deepstingerdmg = {8,15};
         private int finalhitdmg = 30;
@@ -29,7 +29,7 @@ namespace VesselMayCry.Weapons
             CreateOverdrive();
             CreateDeepStinger();
 
-            On.HeroController.DoAttack += RoundTripActive;
+            
             init = true;
 
         }
@@ -42,12 +42,14 @@ namespace VesselMayCry.Weapons
             CreateOverdrive();
             CreateDeepStinger();
 
+            On.HeroController.DoAttack += RoundTripActive;
+
             tk2dSpriteAnimator animator = HeroController.instance.gameObject.GetComponent<tk2dSpriteAnimator>();
             tk2dSpriteAnimationClip slashclip = animator.GetClipByName("Slash");
-            slashclip.CopyFrom(animator.GetClipByName("YamatoSlash"));
+            slashclip.CopyFrom(animator.GetClipByName("MirageSlash"));
             slashclip.name = "Slash";
             tk2dSpriteAnimationClip slashaltclip = animator.GetClipByName("SlashAlt");
-            slashaltclip.CopyFrom(animator.GetClipByName("YamatoSlashAlt"));
+            slashaltclip.CopyFrom(animator.GetClipByName("MirageSlashAlt"));
             slashaltclip.name = "SlashAlt";
         }
 
@@ -63,6 +65,7 @@ namespace VesselMayCry.Weapons
         public void OnDisable()
         {
             HeroController.instance.AffectedByGravity(true);
+            On.HeroController.DoAttack -= RoundTripActive;
         }
 
         private void CreateDeepStinger()

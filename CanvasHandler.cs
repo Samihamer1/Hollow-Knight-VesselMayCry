@@ -1,29 +1,31 @@
-﻿using Steamworks;
-using UnityEngine;
-
-namespace VesselMayCry
+﻿namespace VesselMayCry
 {
     internal class CanvasHandler : MonoBehaviour
     {
         private static CanvasHandler instance;
 
-        private float regularscale = 0.6f;
-        private float vtscale = 0.3f;
-        private float stylescale = 0.15f;
+        private float regularscale = 1f;
+        private float vtscale = 1f;
+        private float weaponscale = 0.6f;
+        private float stylescale = 1f;
 
-        private Vector3 concentrationpos = new Vector3(-180, 250);
-        private Vector3 stylepos = new Vector3(550f, -100);
-        private Vector3 ranktextpos = new Vector3(0, 20);
-        private Vector3 vtpos = new Vector3(-325f, 230);
-        private Vector3 primarypos = new Vector3(400f, -250f);
-        private Vector3 secondarypos = new Vector3(500, -250f);
+        private Vector3 concentrationpos = new Vector3(-485, 395);
+        private Vector3 stylepos = new Vector3(800, -50);
+        private Vector3 vtpos = new Vector3(-320, 370);
+        private Vector3 primarypos = new Vector3(620f, -375);
+        private Vector3 secondarypos = new Vector3(810, -410f);
 
         private GameObject vmccanvas;
         private GameObject concentrationbg;
+        private GameObject concentrationbg2;
+        private GameObject concentrationbg3;
         private GameObject concentrationfg;
-        private GameObject stylefg;
-        private GameObject ranktext;
-        private GameObject vtfg;
+        private GameObject concentrationcr;
+        private GameObject concentrationcr2;
+        private GameObject concentrationcr3;
+        private List<GameObject> stylefg = new List<GameObject>();
+        private List<GameObject> stylebg = new List<GameObject>();
+        private List<GameObject> vtfg = new List<GameObject>();
         private GameObject vtfghive;
         private GameObject vtbg;
         private GameObject beowulfimage;
@@ -54,58 +56,111 @@ namespace VesselMayCry
         private void Awake()
         {
             //canvas
-            vmccanvas = CanvasUtil.CreateCanvas(RenderMode.ScreenSpaceOverlay, new Vector2(1280f, 720f));
+            vmccanvas = CanvasUtil.CreateCanvas(RenderMode.ScreenSpaceOverlay, new Vector2(1920f, 1080f));
             vmccanvas.GetComponent<Canvas>().sortingOrder = 0;
             vmccanvas.transform.position = new Vector3(0, 0);
             UnityEngine.Object.DontDestroyOnLoad(vmccanvas);
             vmccanvas.name = "VMCCanvas";
-            
-            concentrationbg = CreatePanel("VesselMayCry.Resources.concentrationbg.png", regularscale, concentrationpos, false);
-            concentrationfg = CreatePanel("VesselMayCry.Resources.concentrationfg.png", regularscale, concentrationpos, true);
-            concentrationfg.name = "ConcentrationFG";
 
-            stylefg = CreatePanel("VesselMayCry.Resources.stylemeter.png", stylescale, stylepos, true);
-            ranktext = CanvasUtil.CreateTextPanel(stylefg, "", 15, TextAnchor.MiddleCenter, new CanvasUtil.RectData(new Vector2(100, 100), new Vector2(550f, 280f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f)));
-            stylefg.name = "StyleFG";
+            //concentration
+            concentrationbg = CreatePanel("VesselMayCry.Resources.UI.ConcBG1.png", regularscale, concentrationpos, false);
+            concentrationbg2 = CreatePanel("VesselMayCry.Resources.UI.ConcBG2.png", regularscale, concentrationpos, false);
+            concentrationbg3 = CreatePanel("VesselMayCry.Resources.UI.ConcBG3.png", regularscale, concentrationpos, false);
 
-            vtbg = CreatePanel("VesselMayCry.Resources.concentrationbg.png", vtscale, vtpos , false);
-            vtfg = CreatePanel("VesselMayCry.Resources.vtfg.png", vtscale, vtpos, true);
-            vtfg.name = "VTFG";
+            concentrationfg = CreatePanel("VesselMayCry.Resources.UI.ConcFG1.png", regularscale, concentrationpos, true);
 
-            vtfghive = CreatePanel("VesselMayCry.Resources.vtfghive.png", vtscale, vtpos, true);
-            vtfg.name = "VTFGHive";
+            concentrationcr = CreatePanel("VesselMayCry.Resources.UI.ConcCR1.png", regularscale, concentrationpos, false);
+            concentrationcr2 = CreatePanel("VesselMayCry.Resources.UI.ConcCR2.png", regularscale, concentrationpos, false);
+            concentrationcr3 = CreatePanel("VesselMayCry.Resources.UI.ConcCR3.png", regularscale, concentrationpos, false);
 
-            yamatoimage = CreatePanel("VesselMayCry.Resources.Images.Yamato.png", vtscale, primarypos, false);
-            beowulfimage = CreatePanel("VesselMayCry.Resources.Images.Beowulf.png", vtscale, primarypos, false);
-            mirageimage = CreatePanel("VesselMayCry.Resources.Images.MirageEdge.png", vtscale, primarypos, false);
+            //style
+
+            for (int i = 1; i < 8; i++)
+            {
+                GameObject bg = CreatePanel("VesselMayCry.Resources.UI.Style" + i + "BG.png", stylescale, stylepos, true);
+                bg.GetComponent<Image>().fillMethod = Image.FillMethod.Vertical;
+                stylebg.Add(bg);
+                stylefg.Add(CreatePanel("VesselMayCry.Resources.UI.Style" + i + "FG.png", stylescale, stylepos, false));
+            }
+
+            //vt
+
+            vtbg = CreatePanel("VesselMayCry.Resources.UI.VTBG.png", vtscale, vtpos, false);
+
+            for (int i = 0; i < 6; i++)
+            {
+                vtfg.Add(CreatePanel("VesselMayCry.Resources.UI.VT"+i+".png", vtscale, vtpos, false));
+            }
+
+
+            vtfghive = CreatePanel("VesselMayCry.Resources.UI.VTFGHive.png", vtscale, vtpos, true);
+
+            yamatoimage = CreatePanel("VesselMayCry.Resources.Images.Yamato.png", weaponscale, primarypos, false);
+            beowulfimage = CreatePanel("VesselMayCry.Resources.Images.Beowulf.png", weaponscale, primarypos, false);
+            mirageimage = CreatePanel("VesselMayCry.Resources.Images.MirageEdge.png", weaponscale, primarypos, false);
         }
 
         private void SetConcentration(bool val)
         {
             if (concentrationfg && concentrationbg)
             {
-                concentrationbg.SetActive(val);
-                concentrationfg.SetActive(val);
+                if (HeroController.instance != null)
+                {
+                    if (HeroController.instance.playerData.bossRushMode)
+                    {
+                        concentrationcr2.SetActive(val);
+                        concentrationbg2.SetActive(val);
+                    }
+                    else
+                if (HeroController.instance.playerData.permadeathMode == 1)
+                    {
+                        concentrationcr3.SetActive(val);
+                        concentrationbg3.SetActive(val);
+                    }
+                    else
+                    {
+                        concentrationbg.SetActive(val);
+                        concentrationcr.SetActive(val);
+                    }
+                    concentrationfg.SetActive(val);
+                }               
             }
             
         }
 
         private void SetStyle(bool val)
         {
-            if (stylefg && ranktext)
+            if (stylefg.Count != 0 && stylebg.Count != 0)
             {
-                stylefg.SetActive(val);
-                ranktext.SetActive(val);
+                foreach (GameObject obj in stylefg)
+                {
+                    obj.SetActive(false);
+                }
+                foreach (GameObject obj in stylebg)
+                {
+                    obj.SetActive(false);
+                }
+
+                stylefg[Style.rank].SetActive(val);
+                stylebg[Style.rank].SetActive(val);
             }
         }
 
         private void SetVT(bool val)
         {
-            if (vtbg && vtfg)
+            if (vtbg && vtfg.Count != 0)
             {
+                foreach (GameObject obj in vtfg)
+                {
+                    obj.SetActive(false);
+                }
                 vtbg.SetActive(val);
-                vtfg.SetActive(val);
                 vtfghive.SetActive(val);
+
+                if (val == true)
+                {
+                    vtfg[VesselTrigger.vtval].SetActive(true);
+                }
             }
         }
 
@@ -152,6 +207,7 @@ namespace VesselMayCry
                 image.fillMethod = Image.FillMethod.Horizontal;
                 image.preserveAspect = false;
             }
+            panel.SetActive(false);
             return panel;
         }
 
@@ -167,8 +223,14 @@ namespace VesselMayCry
                 {
                     SetConcentration(true);
                     SetFill(concentrationfg, Concentration.concentrationvalue / Concentration.concentrationmax);
+                    //dude why am i doing this
                     concentrationbg.GetComponent<RectTransform>().localPosition = concentrationpos;
                     concentrationfg.GetComponent<RectTransform>().localPosition = concentrationpos;
+                    concentrationcr.GetComponent<RectTransform>().localPosition = concentrationpos;
+                    concentrationbg2.GetComponent<RectTransform>().localPosition = concentrationpos;
+                    concentrationcr2.GetComponent<RectTransform>().localPosition = concentrationpos;
+                    concentrationbg3.GetComponent<RectTransform>().localPosition = concentrationpos;
+                    concentrationcr3.GetComponent<RectTransform>().localPosition = concentrationpos;
                 }
 
                 if (trigger == null)
@@ -178,19 +240,24 @@ namespace VesselMayCry
                 } else
                 {
                     SetVT(true);
-                    SetFill(vtfg, VesselTrigger.vtval / VesselTrigger.vtmax);
                     vtbg.GetComponent<RectTransform>().localPosition = vtpos;
-                    vtfg.GetComponent<RectTransform>().localPosition = vtpos;
+
+                    foreach (GameObject obj in vtfg)
+                    {
+                        obj.GetComponent<RectTransform>().localPosition = vtpos;
+                    }
 
                     vtfghive.GetComponent<RectTransform>().localPosition = vtpos;
                     if (Charms.hivebloodequipped)
                     {
                         vtfghive.SetActive(true);
-                        vtfg.SetActive(false);
+                        foreach (GameObject obj in vtfg)
+                        {
+                            obj.SetActive(false);
+                        }
                     } else
                     {
                         vtfghive.SetActive(false);
-                        vtfg.SetActive(true);
                     }
                 }
 
@@ -201,13 +268,21 @@ namespace VesselMayCry
                 } else
                 {
                     SetStyle(true);
-                    SetFill(stylefg, Style.meter / Style.metermax);
-                    ranktext.GetComponent<Text>().text = Style.ranks[Style.rank];
-                    stylefg.GetComponent<RectTransform>().localPosition = stylepos;
-                    ranktext.GetComponent<RectTransform>().localPosition = ranktextpos;
+                    SetFill(stylebg[Style.rank], Style.meter / Style.metermax);
+
+                    foreach (GameObject obj in stylefg)
+                    {
+                        obj.GetComponent<RectTransform>().localPosition = stylepos;
+                    }
+                    foreach (GameObject obj in stylebg)
+                    {
+                        obj.GetComponent<RectTransform>().localPosition = stylepos;
+                    }
+
+
                     if (Style.rank == 0 && Style.meter == 0)
                     {
-                        ranktext.GetComponent<Text>().text = "";
+                        SetStyle(false);
                     }
                 }
                 
@@ -267,6 +342,15 @@ namespace VesselMayCry
                     }
                 }
 
+                GameObject inven = GameCameras.instance.hudCamera.gameObject.Child("Inventory");
+                PlayMakerFSM fsm = inven.LocateMyFSM("Inventory Control");
+                if (fsm != null)
+                {
+                    if (fsm.ActiveStateName == "Opened")
+                    {
+                        HideAll();
+                    }
+                }
             }
             else
             {

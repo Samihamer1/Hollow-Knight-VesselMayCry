@@ -93,8 +93,18 @@ namespace VesselMayCry
                 //bloodthirsty
                 if (Charms.bloodthirstybuff)
                 {
-                    hitInstance.Multiplier *= 1.05f;
+                    hitInstance.Multiplier *= 1.1f;
                 }
+
+                //overkill
+                if (Charms.overkillvowequipped && !Charms.hivebloodequipped)
+                {
+                    hitInstance.Multiplier *= 1.35f;
+                } else if (Charms.overkillvowequipped && Charms.hivebloodequipped)
+                {
+                    hitInstance.Multiplier *= 1.15f;
+                }
+
             }
 
             orig(self, hitInstance);

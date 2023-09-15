@@ -133,6 +133,10 @@
                 LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.HellOnEarthAntic.set.png", "HellOnEarthAntic", 12, tk2dSpriteAnimationClip.WrapMode.Once, 10, 109, 128, false, 0);
                 LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.HellOnEarthPunch.set.png", "HellOnEarthPunch", 24, tk2dSpriteAnimationClip.WrapMode.Once, 10, 109, 128, false, 0);
                 LoadKnightAnimation("VesselMayCry.Resources.MirageEdgeAnims.Knight.DeepStinger.set.png", "DeepStinger", 24, tk2dSpriteAnimationClip.WrapMode.Loop, 5, 160, 208, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.BeowulfSlash.set.png", "BeowulfSlash", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.BeowulfAnims.Knight.BeowulfSlashAlt.set.png", "BeowulfSlashAlt", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 136, 133, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.MirageEdgeAnims.Knight.MirageSlash.set.png", "MirageSlash", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 109, 128, false, 0);
+                LoadKnightAnimation("VesselMayCry.Resources.MirageEdgeAnims.Knight.MirageSlashAlt.set.png", "MirageSlashAlt", 20, tk2dSpriteAnimationClip.WrapMode.Once, 15, 136, 133, false, 0);
             }
             
         }

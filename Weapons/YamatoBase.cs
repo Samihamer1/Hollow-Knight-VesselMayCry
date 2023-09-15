@@ -11,11 +11,11 @@
         private float maxColorR = 1f;
         private float maxColorG = 0.5f;
 
-        private int jcutdamage = 30;
-        private int[] combocdamage = { 7, 15 };
-        private int upperslashdamage = 25;
-        private int[] jcedamage = { 100, 200 };
-        private int[] aerialcleavedamage = { 25, 50 };
+        private int jcutdamage = 45;
+        private int[] combocdamage = { 7, 12 };
+        private int upperslashdamage = 60;
+        private int[] jcedamage = { 150, 250 };
+        private int[] aerialcleavedamage = { 25, 80 };
 
         //notes
         //remmeber to add color for the mark of pride thing
@@ -153,7 +153,7 @@
                         if (!VesselTrigger.inVesselTrigger)
                         {
                             float mag = (obj[j].gameObject.transform.position - cut.transform.position).magnitude;
-                            if (mag < distance)
+                            if (mag < distance && obj[j].gameObject.activeSelf)
                             {
                                 distance = mag;
                                 target = obj[j].gameObject;
@@ -162,7 +162,7 @@
                         else
                         {
                             float mag = (obj[j].gameObject.transform.position - cut.transform.position).magnitude;
-                            if (mag < distance)
+                            if (mag < distance && obj[j].gameObject.activeSelf)
                             {
                                 GameObject newcut = CreateSingleJCut();
                                 newcut.transform.position = obj[j].gameObject.transform.position;

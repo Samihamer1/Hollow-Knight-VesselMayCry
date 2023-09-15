@@ -78,6 +78,10 @@
             {
                 AddToPos("YamatoSlash" + i, -0.9844, 0.756, 0.6094, -1.3906);
                 AddToPos("YamatoSlashAlt" + i, -0.8844, 1.056, 0.6094, -1.3906);
+                AddToPos("BeowulfSlash" + i, -0.9844, 0.756, 0.6094, -1.3906);
+                AddToPos("BeowulfSlashAlt" + i, -0.8844, 1.056, 0.6094, -1.3906);
+                AddToPos("MirageSlash" + i, -0.9844, 0.756, 0.6094, -1.3906);
+                AddToPos("MirageSlashAlt" + i, -0.8844, 1.056, 0.6094, -1.3906);
             }
 
             for (int i = 1; i < 7; i++)

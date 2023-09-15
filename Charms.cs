@@ -26,6 +26,7 @@ namespace VesselMayCry
         public static bool bloodthirstyequipped = false;
         public static bool consistencykeyequipped = false;
         public static bool hivebloodequipped = false;
+        public static bool overkillvowequipped = false;
 
         private TextAsset LoadJson(string path)
         {
@@ -107,6 +108,10 @@ namespace VesselMayCry
             data.charmCost_39 = 2;
             data.charmCost_38 = 2;
             data.charmCost_11 = 2;
+            data.charmCost_17 = 2;
+            data.charmCost_4 = 2;
+            data.charmCost_20 = 2;
+            data.charmCost_21 = 3;
         }
 
         private void FocusSpeed(On.HutongGames.PlayMaker.Actions.SetFloatValue.orig_OnEnter orig, SetFloatValue self)
@@ -158,9 +163,18 @@ namespace VesselMayCry
             bloodthirstyequipped = data.equippedCharm_39;
             consistencykeyequipped = data.equippedCharm_22;
             hivebloodequipped = data.equippedCharm_29;
+            overkillvowequipped = data.equippedCharm_17;
             if (hivebloodequipped)
             {
                 StartCoroutine(VesselTrigger.ActivateHiveTrigger());
+            }
+            //crest
+            if (data.equippedCharm_10)
+            {
+                HeroController.instance.SHADOW_DASH_COOLDOWN = 1.3f;
+            } else
+            {
+                HeroController.instance.SHADOW_DASH_COOLDOWN = 1.5f;
             }
 
             bool reset = true;
