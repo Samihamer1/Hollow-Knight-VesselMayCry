@@ -11,6 +11,14 @@
                     collider.gameObject.GetComponent<PlayMakerFSM>().SendEvent("QUAKE FALL START");
                     collider.gameObject.GetComponent<PlayMakerFSM>().SendEvent("DESTROY");
                 }
+
+                foreach (PlayMakerFSM fsm in collider.gameObject.GetComponentsInParent<PlayMakerFSM>())
+                {
+                    if (fsm.FsmName == "Detect Quake")
+                    {
+                        fsm.SetState("Quake Hit");
+                    }
+                }
             }
         }
     }

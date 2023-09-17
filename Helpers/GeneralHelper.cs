@@ -63,7 +63,10 @@ namespace VesselMayCry.Helpers
 
             //add a check for if ur in the same state as before the wait so you dont send next on a random state
             yield return new WaitForSeconds(time);
-            Destroy(obj);
+            if (obj)
+            {
+                Destroy(obj);
+            }
             if (nailartstate == "Inactive" && spellstate == HeroController.instance.spellControl.ActiveStateName)
             {
                 HeroController.instance.spellControl.SendEvent("NEXT");

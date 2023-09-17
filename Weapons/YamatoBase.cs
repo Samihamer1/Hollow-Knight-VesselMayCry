@@ -1,4 +1,5 @@
-﻿using VesselMayCry.Helpers;
+﻿using FrogCore.Ext;
+using VesselMayCry.Helpers;
 
 namespace VesselMayCry.Weapons
 {
@@ -88,7 +89,7 @@ namespace VesselMayCry.Weapons
             }
             else
             {
-                if (HeroController.instance.cState.GetState("transitioning") == false)
+                if (HeroController.instance.cState.GetState("transitioning") == false && !HeroController.instance.cState.superDashing)
                 {
                     HeroController.instance.AffectedByGravity(true);
                 }
@@ -126,6 +127,7 @@ namespace VesselMayCry.Weapons
             //tempdamage
             ContactDamage damage = cut.AddComponent<ContactDamage>();
             damage.SetDamage(jcutdamage);
+            damage.SetExtraOnly();
             cut.SetActive(true);
 
             StartCoroutine(Anims.PlayAnimation("JudgementCut", render, 0.4f));
@@ -163,11 +165,29 @@ namespace VesselMayCry.Weapons
                         }
                         else
                         {
+                            bool found = false;
                             float mag = (obj[j].gameObject.transform.position - cut.transform.position).magnitude;
-                            if (mag < distance && obj[j].gameObject.activeSelf)
+                            MeshRenderer renderer = obj[j].GetComponent<MeshRenderer>();
+                            if (mag < distance)
                             {
-                                GameObject newcut = CreateSingleJCut();
-                                newcut.transform.position = obj[j].gameObject.transform.position;
+                                if (renderer != null)
+                                {
+                                    if (renderer.enabled)
+                                    {
+                                        found = true;
+                                        GameObject newcut = CreateSingleJCut();
+                                        newcut.transform.position = obj[j].gameObject.transform.position;
+                                    } 
+                                } else
+                                {
+                                    found = true;
+                                    GameObject newcut = CreateSingleJCut();
+                                    newcut.transform.position = obj[j].gameObject.transform.position;
+                                }
+                            }
+                            if (found)
+                            {
+                                cut.Destroy();
                             }
                         }
 

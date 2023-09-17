@@ -342,6 +342,16 @@
                     }
                 }
 
+                GameObject hudcanvas = GameCameras.instance.hudCamera.gameObject.Child("Hud Canvas");
+                PlayMakerFSM hudfsm = hudcanvas.LocateMyFSM("Slide Out");
+                if (hudfsm != null)
+                {
+                    if (hudfsm.ActiveStateName == "Out")
+                    {
+                        HideAll();
+                    }
+                }
+
                 GameObject inven = GameCameras.instance.hudCamera.gameObject.Child("Inventory");
                 PlayMakerFSM fsm = inven.LocateMyFSM("Inventory Control");
                 if (fsm != null)

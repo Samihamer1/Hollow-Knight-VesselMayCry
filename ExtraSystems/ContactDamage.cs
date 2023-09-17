@@ -5,7 +5,7 @@ namespace VesselMayCry.ExtraSystems
     internal class ContactDamage : MonoBehaviour
     {
         private int damagenumber = 40;
-        private float magnitude = 0f;
+        private float magnitude = 0.7f;
         private int direction = (int)AttackDirection.normal;
         private bool active = true;
         private bool extra = false;
@@ -119,11 +119,13 @@ namespace VesselMayCry.ExtraSystems
         {
             extra = true;
             ignoreinvul = false;
+            magnitude = 0f;
         }
 
         public void SetExtraOnly()
         {
             extra = true;
+            magnitude = 0f;
         }
     }
 }

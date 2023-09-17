@@ -1,0 +1,120 @@
+{
+    "charmtextdata": [
+        {
+            "key": "CHARM_NAME_7",
+            "text": "Trigger Happy"
+        },
+        {
+            "key": "CHARM_DESC_7",
+            "text": "Your SOUL is exceptionally attuned to the process of channeling.<br><br>SOUL is automatically converted to the Vessel Trigger gauge."
+        },
+        {
+            "key": "CHARM_NAME_34",
+            "text": "Deep Healing"
+        },
+        {
+            "key": "CHARM_DESC_34",
+            "text": "Naturally formed within a crystal over a long period. Strengthens the Trigger inside the bearer.<br><br>The healing effect during Vessel Trigger will double."
+        },
+        {
+            "key": "CHARM_NAME_11",
+            "text": "More Power"
+        },
+        {
+            "key": "CHARM_DESC_11",
+            "text": "I need-<br><br>The bearer's Vessel Trigger will last twice as long, but the healing effect doesn't increase."
+        },
+        {
+            "key": "CHARM_NAME_19",
+            "text": "Slash Scope"
+        },
+        {
+            "key": "CHARM_DESC_19",
+            "text": "To cut apart space and time, the wielder must have impeccable accuracy. Accuracy enough to hit even when it seems as if they missed.<br><br>The bearer will no longer lose Concentration upon a missed strike."
+        },
+        {
+            "key": "CHARM_NAME_33",
+            "text": "Pure Focus"
+        },
+        {
+            "key": "CHARM_DESC_33",
+            "text": "A pure focus allows one to maximise the efficiency of their own body and SOUL, beyond a lesser being's comprehension.<br><br>The user gains Concentration from all attacks, but at a lower rate."
+        },
+        {
+            "key": "CHARM_NAME_15",
+            "text": "Strong Will"
+        },
+        {
+            "key": "CHARM_DESC_15",
+            "text": "Only the strongest minded bugs can take repeated failure, and fight without losing their will. They will find that their Concentration does not shatter so easily.<br><br>The bearer's Concentration gauge is only half depleted when they are hit."
+        },
+        {
+            "key": "CHARM_NAME_12",
+            "text": "Still Void"
+        },
+        {
+            "key": "CHARM_DESC_12",
+            "text": "Although the Vessel may hold new abilities, they are still born of void. As such, it is their birthright to command the void and their Siblings at will.<br><br>When the requirements to use a Super Move are not met, the bearer will gain the ability to scream."
+        },
+        {
+            "key": "CHARM_NAME_26",
+            "text": "Quick Fists"
+        },
+        {
+            "key": "CHARM_DESC_26",
+            "text": "Nail, needle, mace, greatnail, shield, bah! These fools have never struck a bug with their own hands even once. All the power you need is right in your fists!<br><br>Beowulf's second charge activates twice as fast."
+        },
+        {
+            "key": "CHARM_NAME_38",
+            "text": "Safety Net"
+        },
+        {
+            "key": "CHARM_DESC_38",
+            "text": "The Trigger is a part of the wielder, and may autonomously act out in order to protect them from death. In these cases, it will sacrifice strength to keep the wielder alive.<br><br>While in Vessel Trigger, any fatal damage will instead reduce the gauge if possible."
+        },
+        {
+            "key": "CHARM_NAME_39",
+            "text": "Bloodthirsty"
+        },
+        {
+            "key": "CHARM_DESC_39",
+            "text": "Being born of void gives the bug a strong desire to consume. Being a wielder of the Trigger gives the bug a strong desire to fight. For any who happen to be both...<br><br>The bearer will gain SOUL every kill, a temporary damage buff every two kills, and an increase in Style and Concentration every three."
+        },
+        {
+            "key": "CHARM_NAME_22",
+            "text": "Consistency Key"
+        },
+        {
+            "key": "CHARM_DESC_22",
+            "text": "Sometimes going above and beyond isn't needed. Doing an average job of defeating an enemy still gives you a victory.<br><br>The bearer's Style ranks are now locked between B and A."
+        },
+        {
+            "key": "CHARM_NAME_29",
+            "text": "Hiveblood"
+        },
+        {
+            "key": "CHARM_DESC_29",
+            "text": "Golden nugget of the Hive's precious hardened nectar. This sap seems to have an exceptionally strong reaction with the Trigger.<br><br>The wielder's wounds will heal over time, and their Vessel Trigger will be permanently active with a weaker damage boost."
+        },
+        {
+            "key": "CHARM_NAME_17",
+            "text": "Overkill Vow"
+        },
+        {
+            "key": "CHARM_DESC_17",
+            "text": "You shall die!<br><br>The bearer can no longer heal during Vessel Trigger, but gains a significant damage boost permanently."
+        },
+        {
+            "key": "CHARM_NAME_10",
+            "text": "Defender's Crest"
+        },
+        {
+            "key": "CHARM_DESC_10",
+            "text": "Unique charm bestowed by the King of Hallownest to his most loyal knight. Scratched and dirty, but still cared for.<br><br>Slightly decreases the cooldown of the shade dash."
+        },
+        {
+            "key": "CHARM_DESC_28",
+            "text": "Reveals the form of Unn within the bearer.<br><br>While focusing SOUL, the bearer will take on a new shape and can move freely to avoid enemies. Unn's healing will replace the use of the Trigger."
+        }
+    ]
+}

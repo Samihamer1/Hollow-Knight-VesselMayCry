@@ -3,6 +3,11 @@
 A mod which overhauls the knight's gameplay to match a certain eldest son of Sparda.
 Alternatively titled, "I can't believe nobody has made a Vergil mod yet".
 
+## Incompatibilities
+This mod will likely not work with other game overhaul mods or charm mods. The main incompatibilities are:  
+Potentially some charm mods, especially Charm Changer.  
+Custom Knight (Custom animations means the skins will flicker whenever you use a move).
+
 ## Starter Guide (Spoiler-Free)
 This mod can have a strong learning curve if you just hop in, so starting a new save file on classic mode is recommended to ease yourself into the changes. It's your life, though.
 
