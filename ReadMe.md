@@ -1,7 +1,8 @@
 # Vessel May Cry
 
 A mod which overhauls the knight's gameplay to match a certain eldest son of Sparda.
-Alternatively titled, "I can't believe nobody has made a Vergil mod yet".
+Alternatively titled, "I can't believe nobody has made a Vergil mod yet".  
+(I'm not an animator, so please excuse some shaky animations.)
 
 ## Incompatibilities
 This mod will likely not work with other game overhaul mods or charm mods. The main incompatibilities are:  
