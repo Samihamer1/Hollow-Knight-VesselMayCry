@@ -6,7 +6,7 @@ namespace VesselMayCry
     public class VesselMayCry : Mod
     {
         new public string GetName() => "Vessel May Cry";
-        public override string GetVersion() => "v1.0.0.0";
+        public override string GetVersion() => "v1.0.0.1";
 
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)

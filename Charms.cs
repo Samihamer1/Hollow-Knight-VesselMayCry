@@ -7,7 +7,7 @@ namespace VesselMayCry
     {
         public TextAsset jsonFile;
         public CharmTextData fulldata;
-        private string[] fsmlist = {"Thorn Counter", "Enemy Recoil Up", "Hatchling Spawn", "Set Spell Cost", "Spawn Orbit Shield", "Weaverling Control", "Spawn Grimmchild", "Pool Flukes", "Pool Flukes"};
+        private string[] fsmlist = {"Thorn Counter", "Enemy Recoil Up", "Hatchling Spawn", "Set Spell Cost", "Spawn Orbit Shield", "Weaverling Control", "Pool Flukes", "Pool Flukes"};
 
         private float autochargetimer = 0;
         private float autochargelimit = 1;
