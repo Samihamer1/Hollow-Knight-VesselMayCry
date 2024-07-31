@@ -312,7 +312,7 @@ namespace VesselMayCry.Weapons
                     }
                 });
                 combostate.AddTransition("NEXT", "Spell End");
-                combostate.AddTransition("SCREAM", "Level Check 3");
+                combostate.AddTransition("SCREAM", "Scream Get?");
             }
             spellcontrol.ChangeTransition("Has Scream?", "CAST", "Judgement Cut End");
 

@@ -211,7 +211,7 @@ namespace VesselMayCry.Weapons
                 punchstate.AddTransition("ANIM END", "Hell On Earth");
                 combostate.AddTransition("NEXT", "Hell On Earth Antic");
                 combostate.AddTransition("CANCEL", "Spell End");
-                combostate.AddTransition("SCREAM", "Level Check 3");
+                combostate.AddTransition("SCREAM", "Scream Get?");
                 shockwavestate.AddTransition("NEXT", "Spell End");
             }
             spellcontrol.ChangeTransition("Has Scream?", "CAST", "Hell On Earth Check");

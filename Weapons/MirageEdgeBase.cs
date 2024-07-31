@@ -227,7 +227,7 @@ namespace VesselMayCry.Weapons
                 finalstrike.AddTransition("NEXT", "Spell End");
                 anticstate.AddTransition("ANIM END", "Deep Stinger");
                 combostate.AddTransition("NEXT", "Deep Stinger Antic");
-                combostate.AddTransition("SCREAM", "Level Check 3");
+                combostate.AddTransition("SCREAM", "Scream Get?");
                 combostate.AddTransition("CANCEL", "Spell End");
                 spinstate.AddTransition("LEFT", "Stinger Left");
                 spinstate.AddTransition("RIGHT", "Stinger Right");
