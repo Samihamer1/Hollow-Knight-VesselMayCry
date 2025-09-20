@@ -360,3 +360,16 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Resources/Sounds/BeowulfSecondCharge.wav
+/Resources/Sounds/ButterflyBlade.wav
+/Resources/Sounds/DeepStinger.wav
+/Resources/Sounds/HellOnEarthBurst.wav
+/Resources/Sounds/HellOnEarthSpark.wav
+/Resources/Sounds/JC.wav
+/Resources/Sounds/JCEEnd.wav
+/Resources/Sounds/JCEStart.wav
+/Resources/Sounds/Shockwave.wav
+/Resources/Sounds/Shockwave2.wav
+/Resources/Sounds/VTEnd.wav
+/Resources/Sounds/VTStart.wav
+/Resources/Sounds/WeaponSwitch.wav
