@@ -294,9 +294,6 @@
     <Compile Remove="Resources\YamatoAnims\Knight\JudgementCut\SpritePositions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Resources\Sounds\.gitignore" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Resources\charmtext.json" />
     <None Remove="Resources\vtfg.png" />
   </ItemGroup>
